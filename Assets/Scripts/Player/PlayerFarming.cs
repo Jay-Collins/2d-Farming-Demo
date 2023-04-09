@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerFarming : MonoSingleton<PlayerFarming>
 {
-    public FieldPerameters DetermineCell()
+    public Vector2Int DetermineCell()
     {
         var playerPos = transform.position;
         var fieldPos = FieldManager.instance.transform.position;
@@ -16,12 +16,11 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
 
         if (isOnCell)
         {
-            return 
+            return new Vector2Int(cellY, cellX);
         }
         else
         {
-            var cell = FieldManager.instance.field[-1, -1];
-            return cell;
+            return new Vector2Int(-1, -1);
         }
     }
 }

@@ -37,8 +37,10 @@ public class FieldManager : MonoSingleton<FieldManager>
 
                 // create game object with a SpriteRenderer then assign the sprite parameter sprite
                 GameObject fieldTile = new GameObject("Field Cell(" + i + "," + j + ")");
-                fieldTile.AddComponent<SpriteRenderer>().sprite = field[i, j].sprite;
                 
+                
+                fieldTile.AddComponent<SpriteRenderer>().sprite = field[i, j].sprite;
+
                 // move new game objects into correct positions
                 fieldTile.transform.position = new Vector3(transform.position.x + j * _tileSize, transform.position.y + i * _tileSize,0);
             }

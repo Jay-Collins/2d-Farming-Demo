@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -68,9 +69,7 @@ public class PlayerMovement : MonoBehaviour
     private void StartWalking(InputAction.CallbackContext context)
     {
         _walking = true;
-        
-        // pass in _state to tell it which way to face detectors.
-        var cell = PlayerFarming.instance.DetermineCell();
+        StartCoroutine(WhileWalking());
     }
 
     private void StopWalking(InputAction.CallbackContext context)
@@ -79,4 +78,24 @@ public class PlayerMovement : MonoBehaviour
     }
     
     private void MovementSwitch() => _canMove = !_canMove;
+
+    private void CheckCell()
+    {
+        var cell = PlayerFarming.instance.DetermineCell();
+
+        if (cell.y != -1)
+        {
+           Debug.Log(cell);
+        }
+        else return;
+    }
+    
+    private IEnumerator WhileWalking()
+    {
+        while (_walking)
+        {
+            yield return new WaitForEndOfFrame();
+            CheckCell();
+        }
+    }
 }

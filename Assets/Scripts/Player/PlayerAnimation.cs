@@ -15,8 +15,8 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
     {
         _animationState = state switch
         {
-            0 => AnimationState.WalkDown,
-            1 => AnimationState.WalkUp,
+            0 => AnimationState.WalkUp,
+            1 => AnimationState.WalkDown,
             2 => AnimationState.WalkLeft,
             3 => AnimationState.WalkRight,
             _ => _animationState
@@ -25,6 +25,11 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         // set animation parameters
         _animator.SetFloat(_speed, movementDirection.sqrMagnitude);
         _animator.SetFloat(_walkState, (float)_animationState);
+    }
+
+    public int CheckDirection()
+    {
+        return (int)_animationState;
     }
 }
 

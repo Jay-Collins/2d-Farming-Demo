@@ -69,7 +69,6 @@ public class PlayerMovement : MonoBehaviour
     private void StartWalking(InputAction.CallbackContext context)
     {
         _walking = true;
-        StartCoroutine(WhileWalking());
     }
 
     private void StopWalking(InputAction.CallbackContext context)
@@ -78,24 +77,4 @@ public class PlayerMovement : MonoBehaviour
     }
     
     private void MovementSwitch() => _canMove = !_canMove;
-
-    private void CheckCell()
-    {
-        var cell = PlayerFarming.instance.DetermineCell();
-
-        if (cell.y != -1)
-        {
-           Debug.Log(cell);
-        }
-        else return;
-    }
-    
-    private IEnumerator WhileWalking()
-    {
-        while (_walking)
-        {
-            yield return new WaitForEndOfFrame();
-            CheckCell();
-        }
-    }
 }

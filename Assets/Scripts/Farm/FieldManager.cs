@@ -1,26 +1,20 @@
-using System;
 using UnityEngine;
 
-public struct FieldPerameters
-{
-    public bool watered;
-    public ScriptableObject crop;
-    public Sprite sprite;
-    public Sprite plantSprite;
-    public bool multipleHarvests;
-}
-    
 public class FieldManager : MonoSingleton<FieldManager>
 {
-    public FieldPerameters[,] field = new FieldPerameters[9, 15];
+    // field array
+    public GameObject[,] field = new GameObject[9, 15];
     
+    // sprite references needed for the new field tile game objects
     [Header("References")] 
-    [SerializeField] private Sprite _dirtSprite;
-    [SerializeField] private Sprite _wetDirtSprite;
-    [SerializeField] private Sprite _seededDirtSprite;
-    [SerializeField] private Sprite _seededWetDirtSprite;
+    [SerializeField] public Sprite dirtSprite;
+    [SerializeField] public Sprite wetDirtSprite;
+    [SerializeField] public Sprite seededDirtSprite;
+    [SerializeField] public Sprite seededWetDirtSprite;
+    [SerializeField] public Sprite cursorSprite;
 
-    public const float _tileSize = 0.16f;
+    // the pixel size of tiles along the X axis
+    public const float _tileSize = 0.16f; 
 
     private void Start()
     {
@@ -28,21 +22,17 @@ public class FieldManager : MonoSingleton<FieldManager>
         {
             for (int j = 0; j < field.GetLength(1); j++)
             {
-                // set each cells default parameters. 
-                field[i, j].watered = false;
-                field[i, j].sprite = _dirtSprite;
-                field[i, j].crop = null;
-                field[i, j].plantSprite = null;
-                field[i, j].multipleHarvests = false; 
-
                 // create game object with a SpriteRenderer then assign the sprite parameter sprite
                 GameObject fieldTile = new GameObject("Field Cell(" + i + "," + j + ")");
-                
-                
-                fieldTile.AddComponent<SpriteRenderer>().sprite = field[i, j].sprite;
+                fieldTile.transform.parent = gameObject.transform;
+                var fieldTileClass = fieldTile.AddComponent<FieldTile>();
+                fieldTileClass.OnCreation();
 
                 // move new game objects into correct positions
                 fieldTile.transform.position = new Vector3(transform.position.x + j * _tileSize, transform.position.y + i * _tileSize,0);
+                
+                // assign to array
+                field[i,j] = fieldTile;
             }
         }
     }

@@ -1464,7 +1464,7 @@ GameObject:
   - component: {fileID: 1619435746}
   - component: {fileID: 1619435745}
   m_Layer: 0
-  m_Name: Grid Manager
+  m_Name: Field Array Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1482,10 +1482,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29160fb986ddc2c4484b1072fd6cf468, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dirtSprite: {fileID: 1241070438, guid: 698623b15ee0ba944aea97c585aa8945, type: 3}
-  _wetDirtSprite: {fileID: -1286482225, guid: 698623b15ee0ba944aea97c585aa8945, type: 3}
-  _seededDirtSprite: {fileID: 399367163, guid: 698623b15ee0ba944aea97c585aa8945, type: 3}
-  _seededWetDirtSprite: {fileID: 0}
+  dirtSprite: {fileID: 1241070438, guid: 698623b15ee0ba944aea97c585aa8945, type: 3}
+  wetDirtSprite: {fileID: -644723452, guid: 698623b15ee0ba944aea97c585aa8945, type: 3}
+  seededDirtSprite: {fileID: 399367163, guid: 698623b15ee0ba944aea97c585aa8945, type: 3}
+  seededWetDirtSprite: {fileID: 0}
+  cursorSprite: {fileID: 21300000, guid: 2bae725506b1bac48a2426d83afbc6d6, type: 3}
 --- !u!4 &1619435746
 Transform:
   m_ObjectHideFlags: 0

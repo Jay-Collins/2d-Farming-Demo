@@ -26,7 +26,8 @@ public class FieldManager : MonoSingleton<FieldManager>
                 GameObject fieldTile = new GameObject("Field Cell(" + i + "," + j + ")");
                 fieldTile.transform.parent = gameObject.transform;
                 var fieldTileClass = fieldTile.AddComponent<FieldTile>();
-                fieldTileClass.OnCreation();
+                Vector2Int fieldPos = new Vector2Int(i, j);
+                fieldTileClass.OnCreation(fieldPos);
 
                 // move new game objects into correct positions
                 fieldTile.transform.position = new Vector3(transform.position.x + j * _tileSize, transform.position.y + i * _tileSize,0);

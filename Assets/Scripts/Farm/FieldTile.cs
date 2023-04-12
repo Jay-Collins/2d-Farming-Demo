@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FieldTile : MonoBehaviour
@@ -7,10 +8,7 @@ public class FieldTile : MonoBehaviour
     private SpriteRenderer _plantRenderer;
     private SpriteRenderer _cursorRenderer;
 
-    private void OnEnable()
-    {
-        PlayerFarming.hideCursor += HideCursor;
-    }
+    private Vector2Int _fieldPos;
 
     // scriptable object of the data for the crop
     private ScriptableObject _crop;
@@ -21,8 +19,16 @@ public class FieldTile : MonoBehaviour
     // days without being watered
     private int _dehydration;
     
-    public void OnCreation()
+    private void OnEnable()
     {
+        PlayerFarming.showCursor += ShowCursor;
+    }
+    
+    public void OnCreation(Vector2Int arrayPos)
+    {
+        // stores location within array
+        _fieldPos = arrayPos;
+        
         // creates child objects for the ground, the cursor, and the plant
         // then applies the default settings for each
         var plantTile = new GameObject("Plant Tile");
@@ -48,6 +54,22 @@ public class FieldTile : MonoBehaviour
     }
 
     // tells the game object to enable or disable the cursor game objects sprite renderer 
-    public void ShowCursor() => _cursorRenderer.enabled = true;
-    public void HideCursor() => _cursorRenderer.enabled = false;
+    public void ShowCursor(List<Vector2Int> pattern)
+    {
+        if (pattern.Contains(_fieldPos))
+        {
+            _cursorRenderer.enabled = true;
+            Debug.Log("Show Cursor" + _fieldPos);
+        }
+        else
+        {
+            Debug.Log("Hide Cursor");
+            _cursorRenderer.enabled = false;
+        }
+    }
+
+    public bool CursorOn()
+    {
+        return _cursorRenderer.enabled;
+    }
 }

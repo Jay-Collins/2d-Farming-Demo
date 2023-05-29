@@ -103,9 +103,10 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                 case 1:
                     var cursorPositions = new List<Vector2Int>();
                     
-                    for (int i = -1; i < 1; i++) // rows
+                    // the rows and columns properly align 3x3 grid based _currentCell position
+                    for (int i = -2; i <= 0; i++) // rows
                     {
-                        for (int j = -1; j < 1; j++) // columns
+                        for (int j = -1; j <= 1; j++) // columns
                         {
                             var newCurrentCell = new Vector2Int(_currentCell.x + i, _currentCell.y + j);
                             fieldTile = FieldManager.instance.field[newCurrentCell.x, newCurrentCell.y]?.GetComponent<FieldTile>();
@@ -117,7 +118,8 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                         }
                     }
                     
-                    showCursor.Invoke(cursorPositions);
+                    if (cursorPositions.Count > 0)
+                        showCursor.Invoke(cursorPositions);
                     break;
                 case 2:
                     break;

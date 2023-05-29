@@ -108,12 +108,12 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                     {
                         for (int j = -1; j <= 1; j++) // columns
                         {
-                            var newCurrentCell = new Vector2Int(_currentCell.x + i, _currentCell.y + j);
-                            fieldTile = FieldManager.instance.field[newCurrentCell.x, newCurrentCell.y]?.GetComponent<FieldTile>();
+                            var offsetCurrentCell = new Vector2Int(_currentCell.x + i, _currentCell.y + j);
+                            fieldTile = FieldManager.instance.field[offsetCurrentCell.x, offsetCurrentCell.y]?.GetComponent<FieldTile>();
 
-                            if (fieldTile != null && !fieldTile.CursorOn())
+                            if (fieldTile != null)
                             {
-                                cursorPositions.Add(newCurrentCell);
+                                cursorPositions.Add(offsetCurrentCell);
                             }
                         }
                     }

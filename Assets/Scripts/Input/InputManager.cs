@@ -11,6 +11,9 @@ public class InputManager : MonoBehaviour
     public static Action<InputAction.CallbackContext> inventoryStarted;
     public static Action<InputAction.CallbackContext> walkStarted;
     public static Action<InputAction.CallbackContext> walkCanceled;
+    public static Action<InputAction.CallbackContext> hotkey1Started;
+    public static Action<InputAction.CallbackContext> hotkey2Started;
+    public static Action<InputAction.CallbackContext> hotkey3Started;
 
     private PlayerInputActions _playerInput;
 
@@ -28,6 +31,10 @@ public class InputManager : MonoBehaviour
         _playerInput.PlayerGeneralInputs.Interact.started += InventoryStarted;
         _playerInput.PlayerGeneralInputs.Walk.started += WalkStarted;
         _playerInput.PlayerGeneralInputs.Walk.canceled += WalkCanceled;
+        // initialize general inputs hotkeys
+        _playerInput.PlayerGeneralInputs.Hotkey1.started += Hotkey1Started;
+        _playerInput.PlayerGeneralInputs.Hotkey2.started += Hotkey2Started;
+        _playerInput.PlayerGeneralInputs.Hotkey3.started += Hotkey3Started;
     }
 
     private void Update()
@@ -79,5 +86,24 @@ public class InputManager : MonoBehaviour
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
             walkCanceled(context);
+    }
+
+    //  General Actions Hotkeys
+    private void Hotkey1Started(InputAction.CallbackContext context)
+    {
+        if (_playerInput.PlayerGeneralInputs.enabled)
+            hotkey1Started(context);
+    }
+
+    private void Hotkey2Started(InputAction.CallbackContext context)
+    {
+        if (_playerInput.PlayerGeneralInputs.enabled)
+            hotkey2Started(context);
+    }
+
+    private void Hotkey3Started(InputAction.CallbackContext context)
+    {
+        if (_playerInput.PlayerGeneralInputs.enabled)
+            hotkey3Started(context);
     }
 }

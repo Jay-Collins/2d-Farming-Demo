@@ -71,6 +71,33 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotkey 1"",
+                    ""type"": ""Button"",
+                    ""id"": ""09da0615-dd48-4c86-8f72-f8fd85ff582d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotkey 2"",
+                    ""type"": ""Button"",
+                    ""id"": ""b575c40e-6309-40e9-947f-30fb5aae2a53"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Hotkey 3"",
+                    ""type"": ""Button"",
+                    ""id"": ""7d66c46a-53bb-4719-bc2a-5d1df8a71f84"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +199,39 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Walk"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e47fc07a-4a0b-4f38-831b-6f9c7f4fac33"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hotkey 1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0cc2825e-a552-42f1-b4a1-c8d0f73d5b9d"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hotkey 2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""baa38bae-10ed-419d-842e-c5d1dfa372e4"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Hotkey 3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +245,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_PlayerGeneralInputs_Interact = m_PlayerGeneralInputs.FindAction("Interact", throwIfNotFound: true);
         m_PlayerGeneralInputs_Invetory = m_PlayerGeneralInputs.FindAction("Invetory", throwIfNotFound: true);
         m_PlayerGeneralInputs_Walk = m_PlayerGeneralInputs.FindAction("Walk", throwIfNotFound: true);
+        m_PlayerGeneralInputs_Hotkey1 = m_PlayerGeneralInputs.FindAction("Hotkey 1", throwIfNotFound: true);
+        m_PlayerGeneralInputs_Hotkey2 = m_PlayerGeneralInputs.FindAction("Hotkey 2", throwIfNotFound: true);
+        m_PlayerGeneralInputs_Hotkey3 = m_PlayerGeneralInputs.FindAction("Hotkey 3", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -249,6 +312,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGeneralInputs_Interact;
     private readonly InputAction m_PlayerGeneralInputs_Invetory;
     private readonly InputAction m_PlayerGeneralInputs_Walk;
+    private readonly InputAction m_PlayerGeneralInputs_Hotkey1;
+    private readonly InputAction m_PlayerGeneralInputs_Hotkey2;
+    private readonly InputAction m_PlayerGeneralInputs_Hotkey3;
     public struct PlayerGeneralInputsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -258,6 +324,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_PlayerGeneralInputs_Interact;
         public InputAction @Invetory => m_Wrapper.m_PlayerGeneralInputs_Invetory;
         public InputAction @Walk => m_Wrapper.m_PlayerGeneralInputs_Walk;
+        public InputAction @Hotkey1 => m_Wrapper.m_PlayerGeneralInputs_Hotkey1;
+        public InputAction @Hotkey2 => m_Wrapper.m_PlayerGeneralInputs_Hotkey2;
+        public InputAction @Hotkey3 => m_Wrapper.m_PlayerGeneralInputs_Hotkey3;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGeneralInputs; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -282,6 +351,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Walk.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnWalk;
                 @Walk.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnWalk;
                 @Walk.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnWalk;
+                @Hotkey1.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey1;
+                @Hotkey1.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey1;
+                @Hotkey1.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey1;
+                @Hotkey2.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey2;
+                @Hotkey2.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey2;
+                @Hotkey2.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey2;
+                @Hotkey3.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey3;
+                @Hotkey3.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey3;
+                @Hotkey3.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey3;
             }
             m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface = instance;
             if (instance != null)
@@ -301,6 +379,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Walk.started += instance.OnWalk;
                 @Walk.performed += instance.OnWalk;
                 @Walk.canceled += instance.OnWalk;
+                @Hotkey1.started += instance.OnHotkey1;
+                @Hotkey1.performed += instance.OnHotkey1;
+                @Hotkey1.canceled += instance.OnHotkey1;
+                @Hotkey2.started += instance.OnHotkey2;
+                @Hotkey2.performed += instance.OnHotkey2;
+                @Hotkey2.canceled += instance.OnHotkey2;
+                @Hotkey3.started += instance.OnHotkey3;
+                @Hotkey3.performed += instance.OnHotkey3;
+                @Hotkey3.canceled += instance.OnHotkey3;
             }
         }
     }
@@ -312,5 +399,8 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnInvetory(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
+        void OnHotkey1(InputAction.CallbackContext context);
+        void OnHotkey2(InputAction.CallbackContext context);
+        void OnHotkey3(InputAction.CallbackContext context);
     }
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,8 +13,7 @@ public class PlayerInventory : MonoSingleton<PlayerInventory>
         InputManager.hotkey2Started += QuickSlot2;
         InputManager.hotkey3Started += QuickSlot3;
     }
-
-
+    
     // Start is called before the first frame update
     void Start()
     {

@@ -166,6 +166,34 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                     break;
                 
                 case 3: // seeds =======================================================================================
+                    // ===!!!      for the sake of this demo the watering can and seeds use the same pattern      !!!===
+                    // ===!!!   in a final game these would level up for the watering can and change over time    !!!===
+                    // ===!!!   the watering can section would end up looking vastly different in final product   !!!===
+
+                    // the rows and columns properly align a 3x3 grid based _currentCell position
+                    for (int i = -1; i <= 1; i++) // rows
+                    {
+                        for (int j = -1; j <= 1; j++) // columns 
+                        {
+                            // offset the current cell for each part of the pattern, creating a 3x3 grid
+                            offsetCurrentCell = new Vector2Int(_currentCell.x + i, _currentCell.y + j);
+
+                            // check player direction and offset pattern accordingly
+                            // due to how the array was generated the x and y axis are swapped
+                            switch (_direction)
+                            {
+                                case 0: offsetCurrentCell.x += 2; break; // up
+                                case 1: offsetCurrentCell.x -= 2; break; // down
+                                case 2: offsetCurrentCell.y -= 2; break; // left
+                                case 3: offsetCurrentCell.y += 2; break; // right
+                            }
+                            
+                            cursorPositions.Add(offsetCurrentCell);
+                        }
+                    }
+ 
+                    if (cursorPositions.Count > 0)
+                        showCursor.Invoke(cursorPositions);
                     break;
             }
         }

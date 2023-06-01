@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerInventory : MonoSingleton<PlayerInventory>
 {
-    private enum EquippedTool {None = 0, WateringCan = 1, Hoe = 2}
+    private enum EquippedTool {None = 0, WateringCan = 1, Hoe = 2, Seeds = 3}
 
     private EquippedTool _equippedTool;
 

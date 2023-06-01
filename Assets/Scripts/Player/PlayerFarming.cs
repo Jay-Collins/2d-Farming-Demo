@@ -8,9 +8,6 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
 {
     public static Action<List<Vector2Int>> showCursor;
 
-    private int[,] _1x3Pattern = new int[1, 3];
-    private int[,] _3x3Pattern = new int[3, 3];
-    
     private bool _displayCursor;
     private Vector2Int _currentCell;
     private int _direction;
@@ -43,19 +40,7 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
 
         if (isOnCell)
         {
-            return _direction switch
-            {
-                0 => // up
-                    new Vector2Int(cellY + 1, cellX),
-                1 => // down
-                    new Vector2Int(cellY - 1, cellX),
-                2 => // left
-                    new Vector2Int(cellY, cellX - 1),
-                3 => // right
-                    new Vector2Int(cellY , cellX + 1),
-                _ => // default
-                    new Vector2Int(-1, -1)
-            };
+            return new Vector2Int(cellY, cellX);
         }
 
         // when the player is not on a cell
@@ -70,58 +55,117 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
         if (_currentCell != newCell)
         {
             _currentCell = newCell;
+            Debug.Log(_currentCell);
             CalculateCursor();
         }
     }
     
     private void CalculateCursor()
     {
-        Debug.Log("Calculating Cursor!");
-        
         var numberOfRows = FieldManager.instance.field.GetLength(0);
         var numberOfColumns = FieldManager.instance.field.GetLength(1);
         
-        // checks if the current cell (which is the cell in front of the player)
-        // is within the bounds of the array
+        // checks if the current cell (which is the cell under) is within the bounds of the array
         if (_currentCell.y >= 0 && _currentCell.y < numberOfColumns && _currentCell.x >= 0 && _currentCell.x < numberOfRows)
         {
-            // grab cell game objects FieldTile component
-            // if fieldTile is not null and the cursor isn't already on
-            // turn on cursor for cell player is on
-
-            FieldTile fieldTile;
+            // cursorPosition is the list that gets sent with the Action to display the cursors
+            // offsetCurrentCell stores the current cell under the player to be manipulated
+            // solves issues with manipulating the current cell directly
+            var cursorPositions = new List<Vector2Int>();
+            var offsetCurrentCell = new Vector2Int(_currentCell.x, _currentCell.y);
+            
+            // display cursor for cells based on tool in hands
             switch (PlayerInventory.instance.GetTool())
             {
-                case 0:
-                    fieldTile = FieldManager.instance.field[_currentCell.x, _currentCell.y]?.GetComponent<FieldTile>();
-
-                    if (fieldTile != null && !fieldTile.CursorOn())
+                case 0: // empty hands =================================================================================
+                    // empty hands displays 1 cursor offset 1 tile in front of the player
+                    // due to how the array was generated the x and y axis are swapped
+                    switch (_direction)
                     {
-                        showCursor.Invoke(new List<Vector2Int>{_currentCell});
+                        case 0: offsetCurrentCell.x += 1; break; // up
+                        case 1: offsetCurrentCell.x -= 1; break; // down
+                        case 2: offsetCurrentCell.y -= 1; break; // left
+                        case 3: offsetCurrentCell.y += 1; break; // right
                     }
-                    break;
-                case 1:
-                    var cursorPositions = new List<Vector2Int>();
-                    
-                    // the rows and columns properly align 3x3 grid based _currentCell position
-                    for (int i = -2; i <= 0; i++) // rows
-                    {
-                        for (int j = -1; j <= 1; j++) // columns
-                        {
-                            var offsetCurrentCell = new Vector2Int(_currentCell.x + i, _currentCell.y + j);
-                            fieldTile = FieldManager.instance.field[offsetCurrentCell.x, offsetCurrentCell.y]?.GetComponent<FieldTile>();
-
-                            if (fieldTile != null)
-                            {
-                                cursorPositions.Add(offsetCurrentCell);
-                            }
-                        }
-                    }
+                    cursorPositions.Add(offsetCurrentCell);
                     
                     if (cursorPositions.Count > 0)
                         showCursor.Invoke(cursorPositions);
                     break;
-                case 2:
+                
+                case 1: // watering can ================================================================================
+                    // the rows and columns properly align a 3x3 grid based _currentCell position
+                    for (int i = -1; i <= 1; i++) // rows
+                    {
+                        for (int j = -1; j <= 1; j++) // columns 
+                        {
+                            // offset the current cell for each part of the pattern, creating a 3x3 grid
+                            offsetCurrentCell = new Vector2Int(_currentCell.x + i, _currentCell.y + j);
+
+                            // check player direction and offset pattern accordingly
+                            // due to how the array was generated the x and y axis are swapped
+                            switch (_direction)
+                            {
+                                case 0: offsetCurrentCell.x += 2; break; // up
+                                case 1: offsetCurrentCell.x -= 2; break; // down
+                                case 2: offsetCurrentCell.y -= 2; break; // left
+                                case 3: offsetCurrentCell.y += 2; break; // right
+                            }
+                            
+                            cursorPositions.Add(offsetCurrentCell);
+                        }
+                    }
+ 
+                    if (cursorPositions.Count > 0)
+                        showCursor.Invoke(cursorPositions);
+                    break;
+                
+                case 2: // hoe =========================================================================================
+                    // the hoe tool displays a 1x3 pattern so we check direction first and adjust it based on direction
+                    // due to how the array was generated the x and y axis are swapped
+                    switch (_direction)
+                    {
+                        case 0: // up
+                            for (int i = -1; i <= 1; i++) // rows
+                            {
+                                offsetCurrentCell = new Vector2Int(_currentCell.x + 1, _currentCell.y + i);
+                                cursorPositions.Add(offsetCurrentCell);
+                            }
+                            break;
+                        
+                        case 1: // down
+                            for (int i = -1; i <= 1; i++) // rows
+                            {
+                                offsetCurrentCell = new Vector2Int(_currentCell.x - 1, _currentCell.y + i);
+                                cursorPositions.Add(offsetCurrentCell);
+                            }
+                            break;
+                        
+                        case 2: // left
+                            for (int j = -1; j <= 1; j++) // columns
+                            {
+                                offsetCurrentCell = new Vector2Int(_currentCell.x +j, _currentCell.y -1);
+                                cursorPositions.Add(offsetCurrentCell);
+                            }
+                            break;
+
+                        case 3: // right
+                            for (int j = -1; j <= 1; j++) // columns
+                            {
+                                offsetCurrentCell = new Vector2Int(_currentCell.x +j, _currentCell.y +1);
+                                cursorPositions.Add(offsetCurrentCell);
+                            }
+                            break;
+                    }
+
+                    if (cursorPositions.Count > 0)
+                    {
+                        Debug.Log(cursorPositions);
+                        showCursor.Invoke(cursorPositions);
+                    }
+                    break;
+                
+                case 3: // seeds =======================================================================================
                     break;
             }
         }

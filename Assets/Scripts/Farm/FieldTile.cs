@@ -59,11 +59,9 @@ public class FieldTile : MonoBehaviour
         if (pattern.Contains(_fieldPos))
         {
             _cursorRenderer.enabled = true;
-            Debug.Log("Show Cursor" + _fieldPos);
         }
         else
         {
-            Debug.Log("Hide Cursor");
             _cursorRenderer.enabled = false;
         }
     }

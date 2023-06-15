@@ -9,11 +9,14 @@ public class InputManager : MonoBehaviour
     public static Action<InputAction.CallbackContext> interactCanceled;
     public static Action<InputAction.CallbackContext> cancelStarted;
     public static Action<InputAction.CallbackContext> inventoryStarted;
-    public static Action<InputAction.CallbackContext> walkStarted;
-    public static Action<InputAction.CallbackContext> walkCanceled;
-    public static Action<InputAction.CallbackContext> hotkey1Started;
-    public static Action<InputAction.CallbackContext> hotkey2Started;
-    public static Action<InputAction.CallbackContext> hotkey3Started;
+    public static Action walkStarted;
+    public static Action walkCanceled;
+    public static Action cycleToolsUp;
+    public static Action cycleToolsDown;
+    public static Action cycleItemsUp;
+    public static Action cycleItemsDown;
+    public static Action useTool;
+    public static Action advanceDay;
 
     private PlayerInputActions _playerInput;
 
@@ -28,13 +31,17 @@ public class InputManager : MonoBehaviour
         // initialize general inputs
         _playerInput.PlayerGeneralInputs.Interact.started += InteractStarted;
         _playerInput.PlayerGeneralInputs.Cancel.started += CancelStarted;
-        _playerInput.PlayerGeneralInputs.Interact.started += InventoryStarted;
+        _playerInput.PlayerGeneralInputs.Invetory.started += InventoryStarted;
         _playerInput.PlayerGeneralInputs.Walk.started += WalkStarted;
         _playerInput.PlayerGeneralInputs.Walk.canceled += WalkCanceled;
-        // initialize general inputs hotkeys
-        _playerInput.PlayerGeneralInputs.Hotkey1.started += Hotkey1Started;
-        _playerInput.PlayerGeneralInputs.Hotkey2.started += Hotkey2Started;
-        _playerInput.PlayerGeneralInputs.Hotkey3.started += Hotkey3Started;
+        _playerInput.PlayerGeneralInputs.UseTool.started += UseToolStarted;
+        
+        _playerInput.PlayerGeneralInputs.CycleToolsUp.started += CycleToolsUpStarted;
+        _playerInput.PlayerGeneralInputs.CycleToolsDown.started += CycleToolsDownStarted;
+        _playerInput.PlayerGeneralInputs.CycleItemsUp.started += CycleItemsUpStarted;
+        _playerInput.PlayerGeneralInputs.CycleItemsDown.started += CycleItemsDownStarted;
+
+        _playerInput.PlayerGeneralInputs.AdvanceDay.started += AdvanceDayStarted;
     }
 
     private void Update()
@@ -79,31 +86,48 @@ public class InputManager : MonoBehaviour
     private void WalkStarted(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
-            walkStarted(context);
+            walkStarted();
     }
 
     private void WalkCanceled(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
-            walkCanceled(context);
+            walkCanceled();
     }
 
-    //  General Actions Hotkeys
-    private void Hotkey1Started(InputAction.CallbackContext context)
+    private void CycleToolsUpStarted(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
-            hotkey1Started(context);
+            cycleToolsUp();
+    }
+    
+    private void CycleToolsDownStarted(InputAction.CallbackContext context)
+    {
+        if (_playerInput.PlayerGeneralInputs.enabled)
+            cycleToolsDown();
+    }
+    
+    private void CycleItemsUpStarted(InputAction.CallbackContext context)
+    {
+        if (_playerInput.PlayerGeneralInputs.enabled)
+            cycleItemsUp();
+    }
+    
+    private void CycleItemsDownStarted(InputAction.CallbackContext context)
+    {
+        if (_playerInput.PlayerGeneralInputs.enabled)
+            cycleItemsDown();
     }
 
-    private void Hotkey2Started(InputAction.CallbackContext context)
+    private void UseToolStarted(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
-            hotkey2Started(context);
+            useTool();
     }
 
-    private void Hotkey3Started(InputAction.CallbackContext context)
+    private void AdvanceDayStarted(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
-            hotkey3Started(context);
+            advanceDay();
     }
 }

@@ -1,51 +1,179 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerInventory : MonoSingleton<PlayerInventory>
 {
-    private enum EquippedTool {None = 0, WateringCan = 1, Hoe = 2, Seeds = 3}
-
-    private EquippedTool _equippedTool;
-
+    [SerializeField] private List<Item> _items;
+    [SerializeField] private List<Tool> _tools;
+    
+    private GameObject _itemInHands; // item currently being held
+    private Tool _equippedTool; // currently selected tool in Tools list inventory
+    private Item _primaryItem; // currently selected item in Items list inventory 
+    private int _equippedToolIndex;
+    private int _primaryItemIndex;
+    private bool _handsFull;
+    
     private void OnEnable()
     {
-        InputManager.hotkey1Started += QuickSlot1;
-        InputManager.hotkey2Started += QuickSlot2;
-        InputManager.hotkey3Started += QuickSlot3;
+        InputManager.cycleToolsUp += CycleToolsUp;
+        InputManager.cycleToolsDown += CycleToolsDown;
+        InputManager.cycleItemsUp += CycleItemsUp;
+        InputManager.cycleItemsDown += CycleItemsDown;
+        InputManager.inventoryStarted += PutItemAway;
+    }
+
+    private void Start()
+    {
+        _equippedTool = _tools[0];
+        UIManager.instance.UpdateToolRotation(_equippedTool);
+        _primaryItem = _items[0];
+        UIManager.instance.UpdateItemRotation(_primaryItem);
     }
     
-    // Start is called before the first frame update
-    void Start()
+// TOOLS ===============================================================================================================
+    private void CycleToolsUp() 
     {
+        // increase index and wrap around if needed
+        var nextIndex = (_equippedToolIndex + 1) % _tools.Count;
+
+        // skip tools that are the same as the currently equipped tool
+        var originalIndex = nextIndex;
+        while (nextIndex != _equippedToolIndex && _tools[nextIndex] == _equippedTool)
+        {
+            nextIndex = (nextIndex + 1) % _tools.Count;
+            
+            if (nextIndex == originalIndex)
+            {
+                break;
+            }
+        }
+
+        // update the equipped tool index and tool, refresh UI
+        _equippedToolIndex = nextIndex;
+        _equippedTool = _tools[_equippedToolIndex];
         
+        UIManager.instance.UpdateToolRotation(_equippedTool);
+        PlayerFarming.instance.CalculateCursor();
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    private void CycleToolsDown()
     {
+        // increase index and wrap around if needed
+        var nextIndex = (_equippedToolIndex - 1 + _tools.Count) % _tools.Count;
+
+        // skip tools that are the same as the currently equipped tool
+        var originalIndex = nextIndex;
+        while (nextIndex != _equippedToolIndex && _tools[nextIndex] == _equippedTool)
+        {
+            nextIndex = (nextIndex - 1 + _tools.Count) % _tools.Count;
+            
+            if (nextIndex == originalIndex)
+            {
+                break;
+            }
+        }
+
+        // update the equipped tool index and tool, refresh UI
+        _equippedToolIndex = nextIndex;
+        _equippedTool = _tools[_equippedToolIndex];
         
+        UIManager.instance.UpdateToolRotation(_equippedTool);
+        PlayerFarming.instance.CalculateCursor();
     }
 
-    private void QuickSlot1(InputAction.CallbackContext context)
+    public void RemoveCurrentTool(int toolID)
     {
-        _equippedTool = EquippedTool.None;
-        Debug.Log("Equipped Nothing!");
+        foreach (var tool in _tools)
+        {
+            if (tool.toolID == toolID)
+            { 
+                _tools.Remove(tool); 
+                break;
+            }
+        }
+            
+        if (!_tools.Any(tool => tool.toolID == toolID))
+        {
+            CycleToolsDown();
+        }
+            
+        UIManager.instance.UpdateToolRotation(_equippedTool);
+        PlayerFarming.instance.CalculateCursor();
+    }
+    
+// ITEMS ===============================================================================================================
+    private void CycleItemsUp()
+    {
+        // increase index and wrap around if needed
+        var nextIndex = (_primaryItemIndex + 1) % _items.Count;
+
+        // skip tools that are the same as the currently equipped tool
+        var originalIndex = nextIndex;
+        while (nextIndex != _primaryItemIndex && _items[nextIndex] == _primaryItem)
+        {
+            nextIndex = (nextIndex + 1) % _items.Count;
+            
+            if (nextIndex == originalIndex)
+            {
+                break;
+            }
+        }
+
+        // update the equipped tool index and tool, refresh UI
+        _primaryItemIndex = nextIndex;
+        _primaryItem = _items[_primaryItemIndex];
+        
+        UIManager.instance.UpdateItemRotation(_primaryItem);
+    }
+    
+    private void CycleItemsDown()
+    {
+        // increase index and wrap around if needed
+        var nextIndex = (_primaryItemIndex - 1 + _items.Count) % _items.Count;
+
+        // skip tools that are the same as the currently equipped tool
+        var originalIndex = nextIndex;
+        while (nextIndex != _primaryItemIndex && _items[nextIndex] == _primaryItem)
+        {
+            nextIndex = (nextIndex - 1 + _items.Count) % _items.Count;
+            
+            if (nextIndex == originalIndex)
+            {
+                break;
+            }
+        }
+
+        // update the equipped tool index and tool, refresh UI
+        _primaryItemIndex = nextIndex;
+        _primaryItem = _items[_primaryItemIndex];
+
+        UIManager.instance.UpdateItemRotation(_primaryItem);
+    }
+    
+    public void PutItemInHands(GameObject item)
+    {
+        _handsFull = true;
+        _itemInHands = item;
     }
 
-    private void QuickSlot2(InputAction.CallbackContext context)
+    public void PutItemAway(InputAction.CallbackContext context)
     {
-        _equippedTool = EquippedTool.WateringCan;
-        Debug.Log("Equipped Watering Can!");
+        if (_handsFull)
+        {
+            var item = _itemInHands.GetComponent<HoldableItem>().itemData;
+            _items.Add(item);
+            Destroy(_itemInHands);
+            _handsFull = false;
+            UIManager.instance.UpdateItemRotation(item);
+        }
     }
-
-    private void QuickSlot3(InputAction.CallbackContext context)
-    {
-        _equippedTool = EquippedTool.Hoe;
-        Debug.Log("Equipped Hoe!");
-    }
-
-    public int GetTool()
-    {
-        return (int)_equippedTool;
-    }
+    
+// Return Functions ====================================================================================================
+    public List<Tool> GetTools() => _tools;
+    public List<Item> GetItems() => _items;
+    public Tool GetEquippedTool() => _equippedTool;
+    public Item GetItemInHands() => _itemInHands.gameObject.GetComponent<Item>();
+    public bool CheckHands() => _handsFull;
 }

@@ -5,13 +5,17 @@ public class Crop : ScriptableObject
 {
     [Header("General Information")]
     public string cropName;
-    public int StageDays;
+    public int stageDays;
 
-    [Header("Sprite References")]
+    [Header("ID Of Seed Tool")] 
+    public int seedToolID;
+
+    [Header("Sprite References")] 
+    public Sprite cropIcon;
     public Sprite stage1;
-    public Sprite Stage2;
-    public Sprite Stage3;
-    public Sprite Stage4;
+    public Sprite stage2;
+    public Sprite stage3;
+    public Sprite stage4;
 
     [Header("Multiple Harvests")] 
     public bool multipleHarvests;

@@ -2,25 +2,37 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerFarming : MonoSingleton<PlayerFarming>
 {
     public static Action<List<Vector2Int>> showCursor;
+    public static Action<List<Vector2Int>, int> usedTool;
 
-    private bool _displayCursor;
+    private List<Vector2Int> _cursorPositions;
     private Vector2Int _currentCell;
+    
+    private bool _displayCursor;
+    private bool _useTool;
     private int _direction;
+    private int _toolID;
+    
 
     private void OnEnable()
     {
         InputManager.walkStarted += DisplayCursor;
         InputManager.walkCanceled += HideCursor;
-    }
-
+        InputManager.useTool += UseTool;
+    }  
+    
     private void Start()
     {
         _currentCell = DetermineCell();
+    }
+
+    private void Update()
+    {
+        if (_useTool)
+            UsedTool();
     }
 
     private Vector2Int DetermineCell()
@@ -55,12 +67,11 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
         if (_currentCell != newCell)
         {
             _currentCell = newCell;
-            Debug.Log(_currentCell);
             CalculateCursor();
         }
     }
     
-    private void CalculateCursor()
+    public void CalculateCursor()
     {
         var numberOfRows = FieldManager.instance.field.GetLength(0);
         var numberOfColumns = FieldManager.instance.field.GetLength(1);
@@ -71,15 +82,17 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
             // cursorPosition is the list that gets sent with the Action to display the cursors
             // offsetCurrentCell stores the current cell under the player to be manipulated
             // solves issues with manipulating the current cell directly
-            var cursorPositions = new List<Vector2Int>();
+            _cursorPositions = new List<Vector2Int>();
             var offsetCurrentCell = new Vector2Int(_currentCell.x, _currentCell.y);
             
             // display cursor for cells based on tool in hands
-            switch (PlayerInventory.instance.GetTool())
+            switch (PlayerInventory.instance.GetEquippedTool().toolID)
             {
                 case 0: // empty hands =================================================================================
                     // empty hands displays 1 cursor offset 1 tile in front of the player
                     // due to how the array was generated the x and y axis are swapped
+                    _toolID = 0;
+                    
                     switch (_direction)
                     {
                         case 0: offsetCurrentCell.x += 1; break; // up
@@ -87,14 +100,16 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                         case 2: offsetCurrentCell.y -= 1; break; // left
                         case 3: offsetCurrentCell.y += 1; break; // right
                     }
-                    cursorPositions.Add(offsetCurrentCell);
+                    _cursorPositions.Add(offsetCurrentCell);
                     
-                    if (cursorPositions.Count > 0)
-                        showCursor.Invoke(cursorPositions);
+                    if (_cursorPositions.Count > 0)
+                        showCursor.Invoke(_cursorPositions);
                     break;
                 
                 case 1: // watering can ================================================================================
                     // the rows and columns properly align a 3x3 grid based _currentCell position
+                    _toolID = 1;
+                    
                     for (int i = -1; i <= 1; i++) // rows
                     {
                         for (int j = -1; j <= 1; j++) // columns 
@@ -112,24 +127,26 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                                 case 3: offsetCurrentCell.y += 2; break; // right
                             }
                             
-                            cursorPositions.Add(offsetCurrentCell);
+                            _cursorPositions.Add(offsetCurrentCell);
                         }
                     }
  
-                    if (cursorPositions.Count > 0)
-                        showCursor.Invoke(cursorPositions);
+                    if (_cursorPositions.Count > 0)
+                        showCursor.Invoke(_cursorPositions);
                     break;
                 
                 case 2: // hoe =========================================================================================
                     // the hoe tool displays a 1x3 pattern so we check direction first and adjust it based on direction
                     // due to how the array was generated the x and y axis are swapped
+                    _toolID = 2;
+                    
                     switch (_direction)
                     {
                         case 0: // up
                             for (int i = -1; i <= 1; i++) // rows
                             {
                                 offsetCurrentCell = new Vector2Int(_currentCell.x + 1, _currentCell.y + i);
-                                cursorPositions.Add(offsetCurrentCell);
+                                _cursorPositions.Add(offsetCurrentCell);
                             }
                             break;
                         
@@ -137,7 +154,7 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                             for (int i = -1; i <= 1; i++) // rows
                             {
                                 offsetCurrentCell = new Vector2Int(_currentCell.x - 1, _currentCell.y + i);
-                                cursorPositions.Add(offsetCurrentCell);
+                                _cursorPositions.Add(offsetCurrentCell);
                             }
                             break;
                         
@@ -145,7 +162,7 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                             for (int j = -1; j <= 1; j++) // columns
                             {
                                 offsetCurrentCell = new Vector2Int(_currentCell.x +j, _currentCell.y -1);
-                                cursorPositions.Add(offsetCurrentCell);
+                                _cursorPositions.Add(offsetCurrentCell);
                             }
                             break;
 
@@ -153,23 +170,24 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                             for (int j = -1; j <= 1; j++) // columns
                             {
                                 offsetCurrentCell = new Vector2Int(_currentCell.x +j, _currentCell.y +1);
-                                cursorPositions.Add(offsetCurrentCell);
+                                _cursorPositions.Add(offsetCurrentCell);
                             }
                             break;
                     }
 
-                    if (cursorPositions.Count > 0)
+                    if (_cursorPositions.Count > 0)
                     {
-                        Debug.Log(cursorPositions);
-                        showCursor.Invoke(cursorPositions);
+                        _cursorPositions.Reverse();
+                        showCursor.Invoke(_cursorPositions);
                     }
                     break;
                 
-                case 3: // seeds =======================================================================================
+                case >= 3: // seeds =======================================================================================
                     // ===!!!      for the sake of this demo the watering can and seeds use the same pattern      !!!===
                     // ===!!!   in a final game these would level up for the watering can and change over time    !!!===
                     // ===!!!   the watering can section would end up looking vastly different in final product   !!!===
-
+                    _toolID = 3;
+                    
                     // the rows and columns properly align a 3x3 grid based _currentCell position
                     for (int i = -1; i <= 1; i++) // rows
                     {
@@ -178,22 +196,13 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                             // offset the current cell for each part of the pattern, creating a 3x3 grid
                             offsetCurrentCell = new Vector2Int(_currentCell.x + i, _currentCell.y + j);
 
-                            // check player direction and offset pattern accordingly
-                            // due to how the array was generated the x and y axis are swapped
-                            switch (_direction)
-                            {
-                                case 0: offsetCurrentCell.x += 2; break; // up
-                                case 1: offsetCurrentCell.x -= 2; break; // down
-                                case 2: offsetCurrentCell.y -= 2; break; // left
-                                case 3: offsetCurrentCell.y += 2; break; // right
-                            }
-                            
-                            cursorPositions.Add(offsetCurrentCell);
+                            // seeds to not offset the pattern but rather keep the player in the middle
+                            _cursorPositions.Add(offsetCurrentCell);
                         }
                     }
  
-                    if (cursorPositions.Count > 0)
-                        showCursor.Invoke(cursorPositions);
+                    if (_cursorPositions.Count > 0)
+                        showCursor.Invoke(_cursorPositions);
                     break;
             }
         }
@@ -202,15 +211,27 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
             showCursor.Invoke(new List<Vector2Int>());
         }
     }
-
-    private void DisplayCursor(InputAction.CallbackContext context)
+    
+    private void UseTool()
+    {
+        DisplayCursor();
+        _useTool = true;
+    }
+    
+    private void UsedTool()
+    {
+        usedTool.Invoke(_cursorPositions, _toolID);
+        _useTool = false;
+    }
+    
+    private void DisplayCursor()
     {
         _displayCursor = true;
         _direction = PlayerAnimation.instance.CheckDirection();
         StartCoroutine(WhileDisplayCursor());
     }
 
-    private void HideCursor(InputAction.CallbackContext context)
+    private void HideCursor()
     {
         _displayCursor = false;
         StopCoroutine(WhileDisplayCursor());

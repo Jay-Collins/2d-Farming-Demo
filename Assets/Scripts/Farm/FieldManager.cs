@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FieldManager : MonoSingleton<FieldManager>
@@ -8,10 +9,14 @@ public class FieldManager : MonoSingleton<FieldManager>
      // sprite references needed for the new field tile game objects
      [Header("References")] 
      [SerializeField] public Sprite dirtSprite;
+     [SerializeField] public Sprite tilledDirtSprite;
      [SerializeField] public Sprite wetDirtSprite;
      [SerializeField] public Sprite seededDirtSprite;
      [SerializeField] public Sprite seededWetDirtSprite;
      [SerializeField] public Sprite cursorSprite;
+     
+     [Header("Crop Scriptable Objects")]
+     [SerializeField] public List<ScriptableObject> _cropsAssetFiles;
  
      // the pixel size of tiles along the X axis
      public const float _tileSize = 0.16f; 

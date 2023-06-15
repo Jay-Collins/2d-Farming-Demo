@@ -33,6 +33,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Use Tool",
+                    "type": "Button",
+                    "id": "feb231eb-2c0a-4767-9f37-568d5f636998",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Invetory",
                     "type": "Button",
                     "id": "bef3db52-2559-4281-86e2-2e6db63a268d",
@@ -51,27 +60,45 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Hotkey 1",
+                    "name": "Cycle Tools Up",
                     "type": "Button",
-                    "id": "09da0615-dd48-4c86-8f72-f8fd85ff582d",
+                    "id": "5b94d89f-e5e1-4892-b48e-381109e9c3ed",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Hotkey 2",
+                    "name": "Cycle Tools Down",
                     "type": "Button",
-                    "id": "b575c40e-6309-40e9-947f-30fb5aae2a53",
+                    "id": "353e3208-59b9-4bbb-8713-8b91cb3aa20b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Hotkey 3",
+                    "name": "Cycle Items Up",
                     "type": "Button",
-                    "id": "7d66c46a-53bb-4719-bc2a-5d1df8a71f84",
+                    "id": "1bb86fad-62af-4207-9fa0-af50801aa7c5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cycle Items Down",
+                    "type": "Button",
+                    "id": "f56cfdf6-ed18-41b9-b523-d4409c361bab",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Advance Day",
+                    "type": "Button",
+                    "id": "e91807a2-23c3-4824-b786-2b5eb8c662cc",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -180,34 +207,67 @@
                 },
                 {
                     "name": "",
-                    "id": "e47fc07a-4a0b-4f38-831b-6f9c7f4fac33",
-                    "path": "<Keyboard>/1",
+                    "id": "631db12a-2ec8-421c-9256-5cf339eeb12f",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Hotkey 1",
+                    "action": "Cycle Tools Up",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "0cc2825e-a552-42f1-b4a1-c8d0f73d5b9d",
-                    "path": "<Keyboard>/2",
+                    "id": "c1f02f9c-da1d-4ea1-b238-9399e83e0853",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Hotkey 2",
+                    "action": "Cycle Tools Down",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "baa38bae-10ed-419d-842e-c5d1dfa372e4",
-                    "path": "<Keyboard>/3",
+                    "id": "45f42d5f-5080-417a-82a9-f940fb7863a5",
+                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Hotkey 3",
+                    "action": "Cycle Items Up",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba8c94c9-d604-4504-ab8f-9fa59de739ae",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cycle Items Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "15e7e57b-f930-4065-9e38-9edee65569e4",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Use Tool",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "60cc3c57-7e35-49e3-8ce7-8faa5b304b0d",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Advance Day",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

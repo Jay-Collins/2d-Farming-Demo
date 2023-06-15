@@ -55,6 +55,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Use Tool"",
+                    ""type"": ""Button"",
+                    ""id"": ""feb231eb-2c0a-4767-9f37-568d5f636998"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Invetory"",
                     ""type"": ""Button"",
                     ""id"": ""bef3db52-2559-4281-86e2-2e6db63a268d"",
@@ -73,27 +82,45 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Hotkey 1"",
+                    ""name"": ""Cycle Tools Up"",
                     ""type"": ""Button"",
-                    ""id"": ""09da0615-dd48-4c86-8f72-f8fd85ff582d"",
+                    ""id"": ""5b94d89f-e5e1-4892-b48e-381109e9c3ed"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Hotkey 2"",
+                    ""name"": ""Cycle Tools Down"",
                     ""type"": ""Button"",
-                    ""id"": ""b575c40e-6309-40e9-947f-30fb5aae2a53"",
+                    ""id"": ""353e3208-59b9-4bbb-8713-8b91cb3aa20b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Hotkey 3"",
+                    ""name"": ""Cycle Items Up"",
                     ""type"": ""Button"",
-                    ""id"": ""7d66c46a-53bb-4719-bc2a-5d1df8a71f84"",
+                    ""id"": ""1bb86fad-62af-4207-9fa0-af50801aa7c5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cycle Items Down"",
+                    ""type"": ""Button"",
+                    ""id"": ""f56cfdf6-ed18-41b9-b523-d4409c361bab"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Advance Day"",
+                    ""type"": ""Button"",
+                    ""id"": ""e91807a2-23c3-4824-b786-2b5eb8c662cc"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -202,34 +229,67 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e47fc07a-4a0b-4f38-831b-6f9c7f4fac33"",
-                    ""path"": ""<Keyboard>/1"",
+                    ""id"": ""631db12a-2ec8-421c-9256-5cf339eeb12f"",
+                    ""path"": ""<Keyboard>/q"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Hotkey 1"",
+                    ""action"": ""Cycle Tools Up"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""0cc2825e-a552-42f1-b4a1-c8d0f73d5b9d"",
-                    ""path"": ""<Keyboard>/2"",
+                    ""id"": ""c1f02f9c-da1d-4ea1-b238-9399e83e0853"",
+                    ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Hotkey 2"",
+                    ""action"": ""Cycle Tools Down"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
-                    ""id"": ""baa38bae-10ed-419d-842e-c5d1dfa372e4"",
-                    ""path"": ""<Keyboard>/3"",
+                    ""id"": ""45f42d5f-5080-417a-82a9-f940fb7863a5"",
+                    ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Hotkey 3"",
+                    ""action"": ""Cycle Items Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba8c94c9-d604-4504-ab8f-9fa59de739ae"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cycle Items Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""15e7e57b-f930-4065-9e38-9edee65569e4"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use Tool"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""60cc3c57-7e35-49e3-8ce7-8faa5b304b0d"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Advance Day"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -243,11 +303,14 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_PlayerGeneralInputs_Movement = m_PlayerGeneralInputs.FindAction("Movement", throwIfNotFound: true);
         m_PlayerGeneralInputs_Cancel = m_PlayerGeneralInputs.FindAction("Cancel", throwIfNotFound: true);
         m_PlayerGeneralInputs_Interact = m_PlayerGeneralInputs.FindAction("Interact", throwIfNotFound: true);
+        m_PlayerGeneralInputs_UseTool = m_PlayerGeneralInputs.FindAction("Use Tool", throwIfNotFound: true);
         m_PlayerGeneralInputs_Invetory = m_PlayerGeneralInputs.FindAction("Invetory", throwIfNotFound: true);
         m_PlayerGeneralInputs_Walk = m_PlayerGeneralInputs.FindAction("Walk", throwIfNotFound: true);
-        m_PlayerGeneralInputs_Hotkey1 = m_PlayerGeneralInputs.FindAction("Hotkey 1", throwIfNotFound: true);
-        m_PlayerGeneralInputs_Hotkey2 = m_PlayerGeneralInputs.FindAction("Hotkey 2", throwIfNotFound: true);
-        m_PlayerGeneralInputs_Hotkey3 = m_PlayerGeneralInputs.FindAction("Hotkey 3", throwIfNotFound: true);
+        m_PlayerGeneralInputs_CycleToolsUp = m_PlayerGeneralInputs.FindAction("Cycle Tools Up", throwIfNotFound: true);
+        m_PlayerGeneralInputs_CycleToolsDown = m_PlayerGeneralInputs.FindAction("Cycle Tools Down", throwIfNotFound: true);
+        m_PlayerGeneralInputs_CycleItemsUp = m_PlayerGeneralInputs.FindAction("Cycle Items Up", throwIfNotFound: true);
+        m_PlayerGeneralInputs_CycleItemsDown = m_PlayerGeneralInputs.FindAction("Cycle Items Down", throwIfNotFound: true);
+        m_PlayerGeneralInputs_AdvanceDay = m_PlayerGeneralInputs.FindAction("Advance Day", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -310,11 +373,14 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGeneralInputs_Movement;
     private readonly InputAction m_PlayerGeneralInputs_Cancel;
     private readonly InputAction m_PlayerGeneralInputs_Interact;
+    private readonly InputAction m_PlayerGeneralInputs_UseTool;
     private readonly InputAction m_PlayerGeneralInputs_Invetory;
     private readonly InputAction m_PlayerGeneralInputs_Walk;
-    private readonly InputAction m_PlayerGeneralInputs_Hotkey1;
-    private readonly InputAction m_PlayerGeneralInputs_Hotkey2;
-    private readonly InputAction m_PlayerGeneralInputs_Hotkey3;
+    private readonly InputAction m_PlayerGeneralInputs_CycleToolsUp;
+    private readonly InputAction m_PlayerGeneralInputs_CycleToolsDown;
+    private readonly InputAction m_PlayerGeneralInputs_CycleItemsUp;
+    private readonly InputAction m_PlayerGeneralInputs_CycleItemsDown;
+    private readonly InputAction m_PlayerGeneralInputs_AdvanceDay;
     public struct PlayerGeneralInputsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -322,11 +388,14 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_PlayerGeneralInputs_Movement;
         public InputAction @Cancel => m_Wrapper.m_PlayerGeneralInputs_Cancel;
         public InputAction @Interact => m_Wrapper.m_PlayerGeneralInputs_Interact;
+        public InputAction @UseTool => m_Wrapper.m_PlayerGeneralInputs_UseTool;
         public InputAction @Invetory => m_Wrapper.m_PlayerGeneralInputs_Invetory;
         public InputAction @Walk => m_Wrapper.m_PlayerGeneralInputs_Walk;
-        public InputAction @Hotkey1 => m_Wrapper.m_PlayerGeneralInputs_Hotkey1;
-        public InputAction @Hotkey2 => m_Wrapper.m_PlayerGeneralInputs_Hotkey2;
-        public InputAction @Hotkey3 => m_Wrapper.m_PlayerGeneralInputs_Hotkey3;
+        public InputAction @CycleToolsUp => m_Wrapper.m_PlayerGeneralInputs_CycleToolsUp;
+        public InputAction @CycleToolsDown => m_Wrapper.m_PlayerGeneralInputs_CycleToolsDown;
+        public InputAction @CycleItemsUp => m_Wrapper.m_PlayerGeneralInputs_CycleItemsUp;
+        public InputAction @CycleItemsDown => m_Wrapper.m_PlayerGeneralInputs_CycleItemsDown;
+        public InputAction @AdvanceDay => m_Wrapper.m_PlayerGeneralInputs_AdvanceDay;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGeneralInputs; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -345,21 +414,30 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnInteract;
+                @UseTool.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnUseTool;
+                @UseTool.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnUseTool;
+                @UseTool.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnUseTool;
                 @Invetory.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnInvetory;
                 @Invetory.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnInvetory;
                 @Invetory.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnInvetory;
                 @Walk.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnWalk;
                 @Walk.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnWalk;
                 @Walk.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnWalk;
-                @Hotkey1.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey1;
-                @Hotkey1.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey1;
-                @Hotkey1.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey1;
-                @Hotkey2.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey2;
-                @Hotkey2.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey2;
-                @Hotkey2.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey2;
-                @Hotkey3.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey3;
-                @Hotkey3.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey3;
-                @Hotkey3.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnHotkey3;
+                @CycleToolsUp.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleToolsUp;
+                @CycleToolsUp.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleToolsUp;
+                @CycleToolsUp.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleToolsUp;
+                @CycleToolsDown.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleToolsDown;
+                @CycleToolsDown.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleToolsDown;
+                @CycleToolsDown.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleToolsDown;
+                @CycleItemsUp.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleItemsUp;
+                @CycleItemsUp.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleItemsUp;
+                @CycleItemsUp.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleItemsUp;
+                @CycleItemsDown.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleItemsDown;
+                @CycleItemsDown.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleItemsDown;
+                @CycleItemsDown.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnCycleItemsDown;
+                @AdvanceDay.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnAdvanceDay;
+                @AdvanceDay.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnAdvanceDay;
+                @AdvanceDay.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnAdvanceDay;
             }
             m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface = instance;
             if (instance != null)
@@ -373,21 +451,30 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @UseTool.started += instance.OnUseTool;
+                @UseTool.performed += instance.OnUseTool;
+                @UseTool.canceled += instance.OnUseTool;
                 @Invetory.started += instance.OnInvetory;
                 @Invetory.performed += instance.OnInvetory;
                 @Invetory.canceled += instance.OnInvetory;
                 @Walk.started += instance.OnWalk;
                 @Walk.performed += instance.OnWalk;
                 @Walk.canceled += instance.OnWalk;
-                @Hotkey1.started += instance.OnHotkey1;
-                @Hotkey1.performed += instance.OnHotkey1;
-                @Hotkey1.canceled += instance.OnHotkey1;
-                @Hotkey2.started += instance.OnHotkey2;
-                @Hotkey2.performed += instance.OnHotkey2;
-                @Hotkey2.canceled += instance.OnHotkey2;
-                @Hotkey3.started += instance.OnHotkey3;
-                @Hotkey3.performed += instance.OnHotkey3;
-                @Hotkey3.canceled += instance.OnHotkey3;
+                @CycleToolsUp.started += instance.OnCycleToolsUp;
+                @CycleToolsUp.performed += instance.OnCycleToolsUp;
+                @CycleToolsUp.canceled += instance.OnCycleToolsUp;
+                @CycleToolsDown.started += instance.OnCycleToolsDown;
+                @CycleToolsDown.performed += instance.OnCycleToolsDown;
+                @CycleToolsDown.canceled += instance.OnCycleToolsDown;
+                @CycleItemsUp.started += instance.OnCycleItemsUp;
+                @CycleItemsUp.performed += instance.OnCycleItemsUp;
+                @CycleItemsUp.canceled += instance.OnCycleItemsUp;
+                @CycleItemsDown.started += instance.OnCycleItemsDown;
+                @CycleItemsDown.performed += instance.OnCycleItemsDown;
+                @CycleItemsDown.canceled += instance.OnCycleItemsDown;
+                @AdvanceDay.started += instance.OnAdvanceDay;
+                @AdvanceDay.performed += instance.OnAdvanceDay;
+                @AdvanceDay.canceled += instance.OnAdvanceDay;
             }
         }
     }
@@ -397,10 +484,13 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnUseTool(InputAction.CallbackContext context);
         void OnInvetory(InputAction.CallbackContext context);
         void OnWalk(InputAction.CallbackContext context);
-        void OnHotkey1(InputAction.CallbackContext context);
-        void OnHotkey2(InputAction.CallbackContext context);
-        void OnHotkey3(InputAction.CallbackContext context);
+        void OnCycleToolsUp(InputAction.CallbackContext context);
+        void OnCycleToolsDown(InputAction.CallbackContext context);
+        void OnCycleItemsUp(InputAction.CallbackContext context);
+        void OnCycleItemsDown(InputAction.CallbackContext context);
+        void OnAdvanceDay(InputAction.CallbackContext context);
     }
 }

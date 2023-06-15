@@ -1,37 +1,35 @@
-using System.Collections;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("References")]
+    [Header("References")] [Header("Player Settings")] [SerializeField]
+    private float _speed;
 
-    [Header("Player Settings")] 
-    [SerializeField] private float _speed;
     [SerializeField] private float _walkSpeed;
     [SerializeField] private bool _walking;
 
     private Vector2 _movementDirection;
-    
+
     private int _state;
     private bool _canMove = true;
-    
+
     private void OnEnable()
     {
         InputManager.movement += CalculateVelocity;
         InputManager.walkStarted += StartWalking;
         InputManager.walkCanceled += StopWalking;
+        GameManager.enablePlayerMovement += EnableMovement;
+        GameManager.disablePlayerMovement += DisableMovement;
     }
 
     private void FixedUpdate()
     {
         if (_canMove && !_walking)
-            transform.Translate(new Vector3(_movementDirection.x, _movementDirection.y,0) * (_speed * Time.deltaTime));
-        
+            transform.Translate(new Vector3(_movementDirection.x, _movementDirection.y, 0) * (_speed * Time.deltaTime));
+
         if (_canMove && _walking)
-            transform.Translate(new Vector3(_movementDirection.x, _movementDirection.y,0) * (_walkSpeed * Time.deltaTime));
+            transform.Translate(new Vector3(_movementDirection.x, _movementDirection.y, 0) *
+                                (_walkSpeed * Time.deltaTime));
     }
 
     private void CalculateVelocity(Vector2 move)
@@ -61,20 +59,31 @@ public class PlayerMovement : MonoBehaviour
                 1 => 3,
                 _ => _state
             };
-        
+
             PlayerAnimation.instance.AnimationStateSwitcher(_state, _movementDirection);
         }
     }
-    
-    private void StartWalking(InputAction.CallbackContext context)
+
+    private void StartWalking()
     {
         _walking = true;
     }
 
-    private void StopWalking(InputAction.CallbackContext context)
+    private void StopWalking()
     {
         _walking = false;
     }
-    
-    private void MovementSwitch() => _canMove = !_canMove;
+
+    private void EnableMovement()
+    {
+        _canMove = true;
+        Debug.Log("Player can move");
+    }
+
+    private void DisableMovement()
+    {
+        _canMove = false;
+        Debug.Log("Player cannot move");
+    }
 }
+    

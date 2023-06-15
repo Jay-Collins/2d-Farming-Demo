@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FieldTile : MonoBehaviour
@@ -7,21 +7,23 @@ public class FieldTile : MonoBehaviour
     private SpriteRenderer _groundRenderer;
     private SpriteRenderer _plantRenderer;
     private SpriteRenderer _cursorRenderer;
-
-    private Vector2Int _fieldPos;
-
-    // scriptable object of the data for the crop
-    private ScriptableObject _crop;
     
-    // if tile has been watered
-    private bool _watered;
+    private Crop _crop; // scriptable object of the data for the crop planted on the tile
+    private Vector2Int _fieldPos; // fields position in the array
     
-    // days without being watered
-    private int _dehydration;
+    private bool _watered; // if tile has been watered that day
+    private bool _tilled; // if tile has been tilled
+    private bool _seeded; // if the tile has seeds
+    private bool _plantGrowing; // if the tile has a plant growing
+    private int _dehydration; // days without being watered
+    private int _plantStage; // stage of the plants growth cycle
+    
     
     private void OnEnable()
     {
         PlayerFarming.showCursor += ShowCursor;
+        PlayerFarming.usedTool += ToolWasUsed;
+        GameManager.newDay += OnNewDay;
     }
     
     public void OnCreation(Vector2Int arrayPos)
@@ -48,13 +50,59 @@ public class FieldTile : MonoBehaviour
         _groundRenderer.sprite = FieldManager.instance.dirtSprite;
     }
 
-    private void NewDay()
+    private void OnNewDay()
     {
-        
+        if (_watered)
+        {
+            _watered = false;
+            _dehydration = 0;
+
+            if (_seeded)
+            {
+                _plantGrowing = true;
+                _seeded = false;
+            }
+            
+            if (_plantGrowing)
+            {
+                _plantStage += 1;
+                
+                switch (_plantStage)
+                {
+                    case 1:
+                        Debug.Log("Plant stage 1!");
+                        _plantRenderer.enabled = true;
+                        _plantRenderer.sprite = _crop.stage1;
+                        break;
+                    case 2:
+                        _plantRenderer.sprite = _crop.stage2;
+                        break;
+                    case 3:
+                        _plantRenderer.sprite = _crop.stage3;
+                        break;
+                    case 4:
+                        _plantRenderer.sprite = _crop.stage4;
+                        break;
+                }
+            }
+            
+            _groundRenderer.sprite = FieldManager.instance.tilledDirtSprite;
+        }
+            
+        if (!_watered && _plantGrowing || _seeded)
+        {
+            _dehydration += 1;
+            if (_dehydration >= 3)
+            {
+                _seeded = false;
+                _plantGrowing = false;
+                _tilled = false;
+            }
+        }
     }
 
     // tells the game object to enable or disable the cursor game objects sprite renderer 
-    public void ShowCursor(List<Vector2Int> pattern)
+    private void ShowCursor(List<Vector2Int> pattern)
     {
         if (pattern.Contains(_fieldPos))
         {
@@ -66,8 +114,73 @@ public class FieldTile : MonoBehaviour
         }
     }
 
-    public bool CursorOn()
+    private void ToolWasUsed(List<Vector2Int> pattern, int toolID)
     {
-        return _cursorRenderer.enabled;
+        switch (toolID)
+        {
+            case 0: // empty hands, nothing happens
+                break;
+            //==========================================================================================================
+            case 1: // watering can, water the tile
+                if (!_tilled) return; // if not tilled watering can does nothing
+
+                if (pattern.Contains(_fieldPos) && !_watered && !_seeded)
+                {
+                    // if tile is not watered and does not have seeds
+                    _watered = true;
+                    _groundRenderer.sprite = FieldManager.instance.wetDirtSprite;
+                }
+                else if (pattern.Contains(_fieldPos) && !_watered && _seeded)
+                {
+                    // if the tile is not watered and does have seeds
+                    _watered = true;
+                    _groundRenderer.sprite = FieldManager.instance.seededWetDirtSprite;
+                }
+                else if (pattern.Contains(_fieldPos) && !_watered && _plantGrowing)
+                {
+                    // if the tile is not watered and has a plant growing
+                    _watered = true;
+                    _groundRenderer.sprite = FieldManager.instance.wetDirtSprite;
+                }
+
+                break;
+            // =========================================================================================================
+            case 2: // hoe, till the tile
+                if (pattern.Contains(_fieldPos) && !_tilled)
+                {
+                    _tilled = true;
+                    _groundRenderer.sprite = FieldManager.instance.tilledDirtSprite;
+                }
+                else if (pattern.Contains(_fieldPos) && _tilled && _crop == null)
+                {
+                    // reset tile if already tilled and a plant is not growing
+                    _seeded = false;
+                    _watered = false;
+                    _tilled = false;
+                    _groundRenderer.sprite = FieldManager.instance.dirtSprite;
+                }
+
+                break;
+            // =========================================================================================================
+            // all tool ID's from 3 on are different types of seeds 
+            case 3:
+                if (pattern.Contains(_fieldPos) && !_seeded && !_plantGrowing && _tilled && PlayerInventory.instance.GetTools().Any(tool => tool.toolID == toolID))
+                {
+                    var crops = FieldManager.instance._cropsAssetFiles;
+                    
+                    foreach (Crop crop in crops)
+                    {
+                        if (crop.seedToolID == toolID)
+                        {
+                            PlayerInventory.instance.RemoveCurrentTool(toolID);
+                            _crop = crop;
+                            _seeded = true;
+                            _groundRenderer.sprite = _watered ? FieldManager.instance.seededWetDirtSprite : FieldManager.instance.seededDirtSprite;
+                        }
+                    }
+                }
+
+                break;
+        }
     }
 }

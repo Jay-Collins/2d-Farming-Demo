@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FieldTile : MonoBehaviour
@@ -7,7 +8,8 @@ public class FieldTile : MonoBehaviour
     private SpriteRenderer _groundRenderer;
     private SpriteRenderer _plantRenderer;
     private SpriteRenderer _cursorRenderer;
-    
+
+    private BoxCollider2D _collider; // the field tilers collider, needed for picking crop
     private Crop _crop; // scriptable object of the data for the crop planted on the tile
     private Vector2Int _fieldPos; // fields position in the array
     
@@ -48,6 +50,10 @@ public class FieldTile : MonoBehaviour
         groundTile.transform.parent = gameObject.transform;
         _groundRenderer = groundTile.AddComponent<SpriteRenderer>();
         _groundRenderer.sprite = FieldManager.instance.dirtSprite;
+
+        _collider = gameObject.AddComponent<BoxCollider2D>();
+        _collider.size = new Vector2(0.16f, 0.16f);
+        _collider.enabled = false;
     }
 
     private void OnNewDay()
@@ -70,7 +76,6 @@ public class FieldTile : MonoBehaviour
                 switch (_plantStage)
                 {
                     case 1:
-                        Debug.Log("Plant stage 1!");
                         _plantRenderer.enabled = true;
                         _plantRenderer.sprite = _crop.stage1;
                         break;
@@ -82,6 +87,9 @@ public class FieldTile : MonoBehaviour
                         break;
                     case 4:
                         _plantRenderer.sprite = _crop.stage4;
+                        gameObject.layer = LayerMask.NameToLayer("Interactable");
+                        gameObject.tag = "PickableCrop";
+                        _collider.enabled = true;
                         break;
                 }
             }
@@ -163,10 +171,11 @@ public class FieldTile : MonoBehaviour
                 break;
             // =========================================================================================================
             // all tool ID's from 3 on are different types of seeds 
-            case 3:
+            case >= 3:
                 if (pattern.Contains(_fieldPos) && !_seeded && !_plantGrowing && _tilled && PlayerInventory.instance.GetTools().Any(tool => tool.toolID == toolID))
                 {
                     var crops = FieldManager.instance._cropsAssetFiles;
+                    Debug.Log(toolID);
                     
                     foreach (Crop crop in crops)
                     {
@@ -182,5 +191,29 @@ public class FieldTile : MonoBehaviour
 
                 break;
         }
+    }
+
+    public void PickPlant()
+    {
+        GameManager.disablePlayerMovement.Invoke(); // disable movement
+        ResetTile();
+        var holdableItemPrefab = GameManager.instance._holdableItemPrefab.GetComponent<HoldableItem>();
+        var instantiatedObject = Instantiate(holdableItemPrefab, transform.position, 
+            Quaternion.identity);
+
+        instantiatedObject.itemData = _crop.correspondingItem; // enable movement
+        PlayerPickUp.instance.PickupItem();
+    }
+
+    private void ResetTile()
+    {
+        // Leaves the ground tilled and watered if already so
+        _collider.enabled = false;
+        _groundRenderer.sprite = FieldManager.instance.tilledDirtSprite;
+        _plantRenderer.sprite = null;
+        _seeded = false;
+        _plantGrowing = false;
+        _dehydration = 0;
+        _plantStage = 0;
     }
 }

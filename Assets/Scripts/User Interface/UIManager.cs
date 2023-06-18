@@ -1,5 +1,4 @@
-using System;
-using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +23,19 @@ public class UIManager : MonoSingleton<UIManager>
         var tools = PlayerInventory.instance.GetTools();
         var currentIndex = -1;
         var toolCount = 0;
+        
+        if (tools.Count <= 0)
+        {
+            // set background opacity
+            var transparent = new Color(1, 1, 1, 0);
+            _toolSlot1Icon.sprite = null; // item before current item
+            _toolSlot1Icon.color = transparent;
+            _toolSlot2Icon.sprite = null; // the current tool
+            _toolSlot2Icon.color = transparent;
+            _toolSlot3Icon.sprite = null; // item after current item
+            _toolSlot3Icon.color = transparent;
+            return;
+        }
 
         for (int i = 0; i < tools.Count; i++)
         {
@@ -62,16 +74,18 @@ public class UIManager : MonoSingleton<UIManager>
                 }
             }
 
-            if (toolCount > 1)
-            {
-                _toolCountText.text = toolCount.ToString();
-            }
-            else
-                _toolCountText.text = "";
+            // check how many of that tool are in the inventory, then update count ui if more than 1
+            var count = PlayerInventory.instance.GetTools().Count(t => tool == t);
+            _toolCountText.text = count > 1 ? count.ToString() : null;
 
+            // set background opacity
+            var opaque = new Color(1, 1, 1, 1);
             _toolSlot1Icon.sprite = tools[previousIndex].toolIcon; // tool before current tool
+            _toolSlot1Icon.color = opaque;
             _toolSlot2Icon.sprite = tools[currentIndex].toolIcon;  // the current tool
+            _toolSlot2Icon.color = opaque;
             _toolSlot3Icon.sprite = tools[nextIndex].toolIcon;     // tool after current tool
+            _toolSlot3Icon.color = opaque;
         }
     }
     
@@ -81,6 +95,19 @@ public class UIManager : MonoSingleton<UIManager>
         var items = PlayerInventory.instance.GetItems();
         var currentIndex = -1;
         var itemCount = 0;
+
+        if (items.Count <= 0)
+        {
+            // set background opacity
+            var transparent = new Color(1, 1, 1, 0);
+            _itemSlot1Icon.sprite = null; // item before current item
+            _itemSlot1Icon.color = transparent;
+            _itemSlot2Icon.sprite = null; // the current tool
+            _itemSlot2Icon.color = transparent;
+            _itemSlot3Icon.sprite = null; // item after current item
+            _itemSlot3Icon.color = transparent;
+            return;
+        }
 
         for (int i = 0; i < items.Count; i++)
         {
@@ -99,7 +126,7 @@ public class UIManager : MonoSingleton<UIManager>
             int previousIndex = currentIndex - 1;
             int nextIndex = currentIndex + 1;
 
-            // handle wrap-around for previous and next indices
+            // handle wrap around for previous and next indices
             if (previousIndex < 0)
                 previousIndex = items.Count - 1;
             if (nextIndex >= items.Count)
@@ -108,7 +135,7 @@ public class UIManager : MonoSingleton<UIManager>
             // check if the next item is the same as the current item
             if (items[nextIndex] == item)
             {
-                // if they are the same, find the index of the next different item
+                // if they are the same find the index of the next different item
                 for (int i = (nextIndex + 1) % items.Count; i != nextIndex; i = (i + 1) % items.Count)
                 {
                     if (items[i] != item)
@@ -119,16 +146,18 @@ public class UIManager : MonoSingleton<UIManager>
                 }
             }
             
-            if (itemCount > 1)
-            {
-                _itemCountText.text = itemCount.ToString();
-            }
-            else
-                _toolCountText.text = "";
+            // check how many of that tool are in the inventory, then update count ui if more than 1
+            var count = PlayerInventory.instance.GetItems().Count(i => item == i);
+            _itemCountText.text = count > 1 ? count.ToString() : null;
 
-            _itemSlot1Icon.sprite = items[previousIndex].itemIcon; // tool before current tool
-            _itemSlot2Icon.sprite = items[currentIndex].itemIcon;  // the current tool
-            _itemSlot3Icon.sprite = items[nextIndex].itemIcon;     // tool after current tool
+            // set background opacity
+            var opaque = new Color(1, 1, 1, 1);
+            _itemSlot1Icon.sprite = items[previousIndex].itemIcon; // item before current item
+            _itemSlot1Icon.color = opaque;
+            _itemSlot2Icon.sprite = items[currentIndex].itemIcon; // the current item
+            _itemSlot2Icon.color = opaque;
+            _itemSlot3Icon.sprite = items[nextIndex].itemIcon;    // item after current item
+            _itemSlot3Icon.color = opaque;
         }
     }
 }

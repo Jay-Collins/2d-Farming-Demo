@@ -20,4 +20,4 @@ MonoBehaviour:
   stage2: {fileID: -598930126, guid: 15515625e4a49f84abbdaa2888f54fb6, type: 3}
   stage3: {fileID: 1111308321, guid: 15515625e4a49f84abbdaa2888f54fb6, type: 3}
   stage4: {fileID: 1488326570, guid: 15515625e4a49f84abbdaa2888f54fb6, type: 3}
-  multipleHarvests: 0
+  correspondingItem: {fileID: 11400000, guid: c0154acc226b22043b0fc1dec87942ab, type: 2}

@@ -10,13 +10,12 @@ public class Crop : ScriptableObject
     [Header("ID Of Seed Tool")] 
     public int seedToolID;
 
-    [Header("Sprite References")] 
-    public Sprite cropIcon;
+    [Header("Sprite References")]
     public Sprite stage1;
     public Sprite stage2;
     public Sprite stage3;
     public Sprite stage4;
-
-    [Header("Multiple Harvests")] 
-    public bool multipleHarvests;
+    
+    [Header("Item Data")] 
+    public Item correspondingItem;
 }

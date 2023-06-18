@@ -12,7 +12,7 @@ public class HoldableItem : MonoBehaviour
             Destroy(gameObject);
         
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _spriteRenderer.sprite = itemData.itemIcon;
-       
+        if (itemData != null)
+            _spriteRenderer.sprite = itemData.itemIcon;
     }
 }

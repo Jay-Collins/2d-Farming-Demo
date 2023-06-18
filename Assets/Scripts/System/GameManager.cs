@@ -7,7 +7,7 @@ public class GameManager : MonoSingleton<GameManager>
     public static Action enablePlayerMovement;
     public static Action disablePlayerMovement;
     
-    [SerializeField] private GameObject _holdableItemPrefab;
+    public GameObject _holdableItemPrefab;
     
     private void OnEnable()
     {
@@ -18,7 +18,4 @@ public class GameManager : MonoSingleton<GameManager>
     {
         newDay?.Invoke();
     }
-
-    public void EnablePlayerMovement() => enablePlayerMovement?.Invoke();
-    public void DisablePlayerMovement() => disablePlayerMovement?.Invoke();
 }

@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
 
 public class PlayerPickUp : MonoSingleton<PlayerPickUp>
 {
@@ -14,14 +11,23 @@ public class PlayerPickUp : MonoSingleton<PlayerPickUp>
         InputManager.interactStarted += PickupItem;
     }
 
-    private void PickupItem(InputAction.CallbackContext context)
+    public void PickupItem()
     {
         if (!PlayerInventory.instance.CheckHands()) // check if player is already holding an item
         {
             var hit = DetectItem();
-        
-            if (hit != default(RaycastHit2D))
+
+            if (hit == default(RaycastHit2D)) return;
+            
+            if (hit.transform.CompareTag("Pickup"))
+            {
                 StartCoroutine(OnHit(hit));
+            }
+            else if (hit.transform.CompareTag("PickableCrop"))
+            {
+                var fieldTile = hit.transform.GetComponent<FieldTile>();
+                fieldTile.PickPlant();
+            }
         }
     }
 
@@ -49,14 +55,16 @@ public class PlayerPickUp : MonoSingleton<PlayerPickUp>
 
     private IEnumerator OnHit(RaycastHit2D hit)
     {
-        Debug.Log("Ran 2");
         SpriteRenderer hitSpriteRenderer = hit.transform.GetComponent<SpriteRenderer>();
         Vector3 target = new Vector3(_position.x, _position.y + 0.16f, _position.z);
         float time = 0f;
         float duration = 0.5f;
         
         hit.collider.enabled = false;
-        GameManager.instance.DisablePlayerMovement();
+        
+        InputManager.instance.DisableGeneralInputs();
+        GameManager.disablePlayerMovement.Invoke();
+        
         while (time < duration)
         {
             time += Time.deltaTime / duration;
@@ -64,16 +72,16 @@ public class PlayerPickUp : MonoSingleton<PlayerPickUp>
 
             if (Math.Abs(time - duration / 2) < 0.001f)
             {
-                hitSpriteRenderer.sortingOrder = 4;
-                Debug.Log("Set sorting within layer to 4");
+                hitSpriteRenderer.sortingOrder = 4; // Set sorting within layer to 4 to display above player
             }
             yield return null;
         }
         
-        GameManager.instance.EnablePlayerMovement();
-        PlayerInventory.instance.PutItemInHands(hit.transform.gameObject);
-        hit.transform.parent = transform;
+        InputManager.instance.EnableGeneralInputs();
+        GameManager.enablePlayerMovement.Invoke();
         
+        PlayerInventory.instance.PutItemInHands(hit.transform.gameObject.GetComponent<HoldableItem>().itemData, hit.transform.gameObject);
+        hit.transform.parent = transform; // THIS MUST COME LAST 
     }
     
     private void OnDrawGizmos()

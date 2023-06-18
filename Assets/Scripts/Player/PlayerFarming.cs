@@ -27,6 +27,7 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
     private void Start()
     {
         _currentCell = DetermineCell();
+        
     }
 
     private void Update()
@@ -186,7 +187,7 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
                     // ===!!!      for the sake of this demo the watering can and seeds use the same pattern      !!!===
                     // ===!!!   in a final game these would level up for the watering can and change over time    !!!===
                     // ===!!!   the watering can section would end up looking vastly different in final product   !!!===
-                    _toolID = 3;
+                    _toolID = PlayerInventory.instance.GetEquippedTool().toolID;
                     
                     // the rows and columns properly align a 3x3 grid based _currentCell position
                     for (int i = -1; i <= 1; i++) // rows
@@ -214,6 +215,8 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
     
     private void UseTool()
     {
+        if (PlayerInventory.instance.CheckHands() || !_displayCursor) return; // return if item is in hands
+        
         DisplayCursor();
         _useTool = true;
     }

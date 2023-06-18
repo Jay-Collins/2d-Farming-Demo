@@ -2,13 +2,13 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour
+public class InputManager : MonoSingleton<InputManager>
 {
     public static Action<Vector2> movement;
-    public static Action<InputAction.CallbackContext> interactStarted;
-    public static Action<InputAction.CallbackContext> interactCanceled;
-    public static Action<InputAction.CallbackContext> cancelStarted;
-    public static Action<InputAction.CallbackContext> inventoryStarted;
+    public static Action interactStarted;
+    public static Action interactCanceled;
+    public static Action cancelStarted;
+    public static Action inventoryStarted;
     public static Action walkStarted;
     public static Action walkCanceled;
     public static Action cycleToolsUp;
@@ -60,27 +60,27 @@ public class InputManager : MonoBehaviour
     private void InteractStarted(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled) 
-            interactStarted(context);
+            interactStarted();
     }
 
     private void InteractCanceled(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
         {
-            interactCanceled(context);  
+            interactCanceled();  
         }
     }
 
     private void CancelStarted(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
-            cancelStarted(context);
+            cancelStarted();
     }
 
     private void InventoryStarted(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
-            inventoryStarted(context);
+            inventoryStarted();
     }
 
     private void WalkStarted(InputAction.CallbackContext context)
@@ -129,5 +129,15 @@ public class InputManager : MonoBehaviour
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
             advanceDay();
+    }
+
+    public void EnableGeneralInputs()
+    {
+        _playerInput.PlayerGeneralInputs.Enable();
+    }
+
+    public void DisableGeneralInputs()
+    {
+        _playerInput.PlayerGeneralInputs.Disable();
     }
 }

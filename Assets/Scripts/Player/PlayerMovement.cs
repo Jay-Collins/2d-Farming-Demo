@@ -77,13 +77,11 @@ public class PlayerMovement : MonoBehaviour
     private void EnableMovement()
     {
         _canMove = true;
-        Debug.Log("Player can move");
     }
 
     private void DisableMovement()
     {
         _canMove = false;
-        Debug.Log("Player cannot move");
     }
 }
     

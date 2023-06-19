@@ -125,6 +125,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Controls"",
+                    ""type"": ""Button"",
+                    ""id"": ""501f9925-0174-41b1-b339-e67f145993e7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -292,6 +301,17 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Advance Day"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ae051e2-2f2d-4726-b381-8e87e494d00a"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Controls"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -311,6 +331,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         m_PlayerGeneralInputs_CycleItemsUp = m_PlayerGeneralInputs.FindAction("Cycle Items Up", throwIfNotFound: true);
         m_PlayerGeneralInputs_CycleItemsDown = m_PlayerGeneralInputs.FindAction("Cycle Items Down", throwIfNotFound: true);
         m_PlayerGeneralInputs_AdvanceDay = m_PlayerGeneralInputs.FindAction("Advance Day", throwIfNotFound: true);
+        m_PlayerGeneralInputs_Controls = m_PlayerGeneralInputs.FindAction("Controls", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -381,6 +402,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGeneralInputs_CycleItemsUp;
     private readonly InputAction m_PlayerGeneralInputs_CycleItemsDown;
     private readonly InputAction m_PlayerGeneralInputs_AdvanceDay;
+    private readonly InputAction m_PlayerGeneralInputs_Controls;
     public struct PlayerGeneralInputsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -396,6 +418,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         public InputAction @CycleItemsUp => m_Wrapper.m_PlayerGeneralInputs_CycleItemsUp;
         public InputAction @CycleItemsDown => m_Wrapper.m_PlayerGeneralInputs_CycleItemsDown;
         public InputAction @AdvanceDay => m_Wrapper.m_PlayerGeneralInputs_AdvanceDay;
+        public InputAction @Controls => m_Wrapper.m_PlayerGeneralInputs_Controls;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGeneralInputs; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -438,6 +461,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @AdvanceDay.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnAdvanceDay;
                 @AdvanceDay.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnAdvanceDay;
                 @AdvanceDay.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnAdvanceDay;
+                @Controls.started -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnControls;
+                @Controls.performed -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnControls;
+                @Controls.canceled -= m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface.OnControls;
             }
             m_Wrapper.m_PlayerGeneralInputsActionsCallbackInterface = instance;
             if (instance != null)
@@ -475,6 +501,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @AdvanceDay.started += instance.OnAdvanceDay;
                 @AdvanceDay.performed += instance.OnAdvanceDay;
                 @AdvanceDay.canceled += instance.OnAdvanceDay;
+                @Controls.started += instance.OnControls;
+                @Controls.performed += instance.OnControls;
+                @Controls.canceled += instance.OnControls;
             }
         }
     }
@@ -492,5 +521,6 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         void OnCycleItemsUp(InputAction.CallbackContext context);
         void OnCycleItemsDown(InputAction.CallbackContext context);
         void OnAdvanceDay(InputAction.CallbackContext context);
+        void OnControls(InputAction.CallbackContext context);
     }
 }

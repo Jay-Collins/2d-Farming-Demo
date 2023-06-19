@@ -216,6 +216,23 @@ public class PlayerFarming : MonoSingleton<PlayerFarming>
     private void UseTool()
     {
         if (PlayerInventory.instance.CheckHands() || !_displayCursor) return; // return if item is in hands
+
+        // play animation and audio clip based on tool ID
+        switch (_toolID)
+        {
+            case 1: // watering can
+                PlayerAnimation.instance.UsedOtherTool();
+                AudioManager.instance.PlayWaterSFX();
+                break;
+            case 2: // hoe
+                PlayerAnimation.instance.UsedPickaxe();
+                AudioManager.instance.PlayDigSFX();
+                break;
+            case >= 3: // seeds
+                PlayerAnimation.instance.UsedOtherTool();
+                AudioManager.instance.PlaySeedsSFX();
+                break;
+        }
         
         DisplayCursor();
         _useTool = true;

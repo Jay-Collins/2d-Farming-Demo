@@ -65,6 +65,8 @@ public class PlayerPickUp : MonoSingleton<PlayerPickUp>
         InputManager.instance.DisableGeneralInputs();
         GameManager.disablePlayerMovement.Invoke();
         
+        PlayerInventory.instance.PickedUpItem(hit.transform.gameObject.GetComponent<HoldableItem>().itemData, hit.transform.gameObject);
+        
         while (time < duration)
         {
             time += Time.deltaTime / duration;
@@ -79,8 +81,6 @@ public class PlayerPickUp : MonoSingleton<PlayerPickUp>
         
         InputManager.instance.EnableGeneralInputs();
         GameManager.enablePlayerMovement.Invoke();
-        
-        PlayerInventory.instance.PutItemInHands(hit.transform.gameObject.GetComponent<HoldableItem>().itemData, hit.transform.gameObject);
         hit.transform.parent = transform; // THIS MUST COME LAST 
     }
     

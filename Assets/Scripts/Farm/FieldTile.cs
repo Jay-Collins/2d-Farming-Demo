@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class FieldTile : MonoBehaviour
@@ -175,8 +174,7 @@ public class FieldTile : MonoBehaviour
                 if (pattern.Contains(_fieldPos) && !_seeded && !_plantGrowing && _tilled && PlayerInventory.instance.GetTools().Any(tool => tool.toolID == toolID))
                 {
                     var crops = FieldManager.instance._cropsAssetFiles;
-                    Debug.Log(toolID);
-                    
+
                     foreach (Crop crop in crops)
                     {
                         if (crop.seedToolID == toolID)

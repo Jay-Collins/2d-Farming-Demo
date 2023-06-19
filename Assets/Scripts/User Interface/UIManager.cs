@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -5,7 +6,9 @@ using UnityEngine.UI;
 
 public class UIManager : MonoSingleton<UIManager>
 {
-    [Header("References")]
+    [Header("References")] 
+    [SerializeField] private GameObject _shopMenu;
+    
     [SerializeField] private Image _toolSlot1Icon;
     [SerializeField] private Image _toolSlot2Icon;
     [SerializeField] private Image _toolSlot3Icon;
@@ -16,6 +19,15 @@ public class UIManager : MonoSingleton<UIManager>
 
     [SerializeField] private TMP_Text _toolCountText;
     [SerializeField] private TMP_Text _itemCountText;
+    [SerializeField] private TMP_Text _moneyText;
+    
+    [SerializeField] private GameObject _controlsText;
+
+    public Image _nightFade;
+
+    private void OnEnable() => InputManager.viewControls += ViewControls;
+    
+    private void Start() => UpdateMoney();
 
     public void UpdateToolRotation(Tool tool)
     {
@@ -160,4 +172,30 @@ public class UIManager : MonoSingleton<UIManager>
             _itemSlot3Icon.color = opaque;
         }
     }
+
+    public void OpenShop()
+    {
+        _shopMenu.SetActive(true);
+        GameManager.disablePlayerMovement?.Invoke();
+        InputManager.instance.DisableGeneralInputs();
+    }
+
+    public void CloseShop()
+    {
+        _shopMenu.SetActive(false);
+        GameManager.enablePlayerMovement?.Invoke();
+        InputManager.instance.EnableGeneralInputs();
+    }
+
+    public void ViewControls() => StartCoroutine(ShowControlsText());
+    
+
+    private IEnumerator ShowControlsText()
+    {
+        _controlsText.SetActive(true);
+        yield return new WaitForSeconds(10);
+        _controlsText.SetActive(false);
+    }
+
+    public void UpdateMoney() => _moneyText.text = PlayerInventory.instance.CheckMoney().ToString();
 }

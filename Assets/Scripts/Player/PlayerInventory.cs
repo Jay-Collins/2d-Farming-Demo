@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class PlayerInventory : MonoSingleton<PlayerInventory>
 {
-    [SerializeField] private SpriteRenderer _heldObject;
+    [SerializeField] private SpriteRenderer _storedHeldObject; // object used to display items above the players head
     [SerializeField] private List<Item> _items;
     [SerializeField] private List<Tool> _tools;
 
     private Item _itemInHands; // item currently being held
-    private GameObject _objectInHands; // the actual game object representing the item in hands
+    private GameObject _objectPickedUp; // the actual game object representing the item the player picked up
     private Tool _equippedTool; // currently selected tool in Tools list inventory
     private Item _primaryItem; // currently selected item in Items list inventory 
     private int _equippedToolIndex;
     private int _primaryItemIndex;
-    private int _money;
+    private int _money = 900;
     private bool _handsFull;
     
     private void OnEnable()
@@ -56,6 +56,7 @@ public class PlayerInventory : MonoSingleton<PlayerInventory>
         _equippedTool = _tools[_equippedToolIndex];
         
         UIManager.instance.UpdateToolRotation(_equippedTool);
+        AudioManager.instance.PlayMenuWhistleSFX();
         PlayerFarming.instance.CalculateCursor();
     }
     
@@ -81,6 +82,7 @@ public class PlayerInventory : MonoSingleton<PlayerInventory>
         _equippedTool = _tools[_equippedToolIndex];
         
         UIManager.instance.UpdateToolRotation(_equippedTool);
+        AudioManager.instance.PlayMenuWhistleSFX();
         PlayerFarming.instance.CalculateCursor();
     }
 
@@ -103,6 +105,13 @@ public class PlayerInventory : MonoSingleton<PlayerInventory>
         UIManager.instance.UpdateToolRotation(_equippedTool);
         PlayerFarming.instance.CalculateCursor();
     }
+
+    public void AddTool(Tool tool)
+    {
+        _tools.Add(tool);
+        _equippedTool = tool;
+        UIManager.instance.UpdateToolRotation(_equippedTool);
+    }
     
 // ITEMS ===============================================================================================================
     private void CycleItemsUp()
@@ -113,6 +122,11 @@ public class PlayerInventory : MonoSingleton<PlayerInventory>
             return; // only cycle if more than 2 items in the items list inventory
         }
         
+        if (_items.Count > 2)
+        {
+            AudioManager.instance.PlayMenuWhistleSFX();
+        }
+
         // increase index and wrap around if needed
         var nextIndex = (_primaryItemIndex + 1) % _items.Count;
 
@@ -143,6 +157,10 @@ public class PlayerInventory : MonoSingleton<PlayerInventory>
             return; // only cycle if more than 1 item in the items list inventory
         }
         
+        if (_items.Count > 2)
+        {
+            AudioManager.instance.PlayMenuWhistleSFX();
+        }
 
         // increase index and wrap around if needed
         var nextIndex = (_primaryItemIndex - 1 + _items.Count) % _items.Count;
@@ -165,72 +183,118 @@ public class PlayerInventory : MonoSingleton<PlayerInventory>
 
         UIManager.instance.UpdateItemRotation(_primaryItem);
     }
-    
-    public void PutItemInHands(Item item, GameObject heldObject)
+
+    public void PickedUpItem(Item item, GameObject heldObject)
     {
         InputManager.inventoryStarted -= TakeOutItem;
         InputManager.inventoryStarted += PutItemAway;
+        
         _handsFull = true;
+        PlayerAnimation.instance.SetHandsAnimation(_handsFull);
+        AudioManager.instance.PlayPickupSFX();
+        
+        _objectPickedUp = heldObject;
         _itemInHands = item;
-        _objectInHands = heldObject;
     }
 
-    public void TakeOutItem()
+    public void PutItemAway()
     {
-        if (_items.Count <= 0) return; // if items inventory is empty just return
+        _primaryItem = _itemInHands;
+        
+        if (_items.Count <= 0)
+        {
+            // if the inventory is empty
+            _items.Add(_itemInHands);
+        }
+        else
+        {
+            // if the inventory already has the same item
+            int insertIndex = _items.FindIndex(i => i.itemID == _itemInHands.itemID) + 1;
+            
+            if (insertIndex == -1)
+                _items.Add(_itemInHands);
+            else
+                _items.Insert(insertIndex , _itemInHands);
+        }
+        
+        _itemInHands = null;
+        UIManager.instance.UpdateItemRotation(_primaryItem);
+        
+        // set the sprite of the stored held object to null in case the item was taken from the inventory
+        if (_storedHeldObject.sprite != null)
+            _storedHeldObject.sprite = null;
 
-        _heldObject.sprite = _primaryItem.itemIcon;
+        // set of object picked up to be null in case the player picked up and item off the ground
+        if (_objectPickedUp != null)
+            Destroy(_objectPickedUp);
+
+        _handsFull = false;
+        PlayerAnimation.instance.SetHandsAnimation(_handsFull);
+        AudioManager.instance.PlayPickupSFX();
+        
+        UIManager.instance.UpdateItemRotation(_primaryItem);
+        InputManager.inventoryStarted += TakeOutItem;
+        InputManager.inventoryStarted -= PutItemAway;
+    }
+
+    private void TakeOutItem()
+    {
+        if (_items.Count <= 0) return;
+        
+        _handsFull = true;
+        PlayerAnimation.instance.SetHandsAnimation(_handsFull);
+        AudioManager.instance.PlayPickupSFX();
+        
+        _storedHeldObject.sprite = _primaryItem.itemIcon;
         _itemInHands = _primaryItem;
+        
+        
+        if (!_items.Contains(_itemInHands))
+            CycleItemsDown();
+
+        _items.Remove(_primaryItem);
+        UIManager.instance.UpdateItemRotation(_itemInHands);
+        
+        InputManager.inventoryStarted -= TakeOutItem;
+        InputManager.inventoryStarted += PutItemAway;
+    }
+
+    public void SellItem()
+    {
+        _money += _itemInHands.itemValue;
         
         if (!_items.Contains(_itemInHands))
             CycleItemsDown();
         
-        _items.Remove(_primaryItem);
-
-        InputManager.inventoryStarted -= TakeOutItem;
-        InputManager.inventoryStarted += PutItemAway;
-    }
-    
-    public void PutItemAway()
-    {
-        var item = _itemInHands;
-        
-        // this sets the picked up item to be the primary selected item if inventory was empty
-        
-        if (_items.Count <= 0) 
-        {
-            _primaryItem = item;
-            _items.Add(item);
-        }
-        else
-        {
-            // it also inserts the item into the inventory list next to the others like it
-            int insertIndex = _items.FindIndex(i => i.itemID == item.itemID) + 1;
-            _items.Insert(insertIndex, item);
-        }
-
-        _heldObject.sprite = null; // for when the player picks up from their bag
-        if (_objectInHands != null)
-            Destroy(_objectInHands); // for when the player picks up an item off the ground
-        
         _handsFull = false;
-        UIManager.instance.UpdateItemRotation(item);
+        PlayerAnimation.instance.SetHandsAnimation(_handsFull);
+        AudioManager.instance.PlayPickupSFX();
         
-        InputManager.inventoryStarted += TakeOutItem;
+        _itemInHands = null;
+        
+        if (_storedHeldObject.sprite != null)
+            _storedHeldObject.sprite = null;
+        if (_objectPickedUp != null)
+            Destroy(_objectPickedUp);
+        if (_items.Count <= 0)
+            _primaryItem = null;
+        
+        UIManager.instance.UpdateMoney();
         InputManager.inventoryStarted -= PutItemAway;
+        InputManager.inventoryStarted += TakeOutItem;
     }
-    
+
 // MONEY ===============================================================================================================    
     private void AddMoney(int moneyAdded)
     {
         _money += moneyAdded;
-        // tell UI to update money ui
+        UIManager.instance.UpdateMoney();
     }
 
-    private void RemoveMoney(int moneyRemoved)
+    public void RemoveMoney(int moneyRemoved)
     {
         _money -= moneyRemoved;
-        // tell UI to update money ui
+        UIManager.instance.UpdateMoney();
     }
 
 // Return Functions ====================================================================================================

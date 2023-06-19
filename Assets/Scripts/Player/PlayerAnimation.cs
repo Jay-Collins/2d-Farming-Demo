@@ -10,6 +10,9 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
     private AnimationState _animationState;
     private readonly int _walkState = Animator.StringToHash("WalkState");
     private readonly int _speed = Animator.StringToHash("Speed");
+    private readonly int _handsFull = Animator.StringToHash("HandsFull");
+    private readonly int _usedPickaxe = Animator.StringToHash("UsedPickaxe");
+    private readonly int _usedOtherTool = Animator.StringToHash("UsedOtherTool");
 
     public void AnimationStateSwitcher(int state, Vector2 movementDirection)
     {
@@ -27,9 +30,12 @@ public class PlayerAnimation : MonoSingleton<PlayerAnimation>
         _animator.SetFloat(_walkState, (float)_animationState);
     }
 
-    public int CheckDirection()
-    {
-        return (int)_animationState;
-    }
+    public void SetHandsAnimation(bool hands) => _animator.SetBool(_handsFull, hands);
+
+    public void UsedPickaxe() => _animator.SetTrigger(_usedPickaxe);
+    
+    public void UsedOtherTool() => _animator.SetTrigger(_usedOtherTool);
+    
+    public int CheckDirection() => (int)_animationState;
 }
 

@@ -17,6 +17,7 @@ public class InputManager : MonoSingleton<InputManager>
     public static Action cycleItemsDown;
     public static Action useTool;
     public static Action advanceDay;
+    public static Action viewControls;
 
     private PlayerInputActions _playerInput;
 
@@ -42,6 +43,7 @@ public class InputManager : MonoSingleton<InputManager>
         _playerInput.PlayerGeneralInputs.CycleItemsDown.started += CycleItemsDownStarted;
 
         _playerInput.PlayerGeneralInputs.AdvanceDay.started += AdvanceDayStarted;
+        _playerInput.PlayerGeneralInputs.Controls.started += ViewControls;
     }
 
     private void Update()
@@ -128,9 +130,10 @@ public class InputManager : MonoSingleton<InputManager>
     private void AdvanceDayStarted(InputAction.CallbackContext context)
     {
         if (_playerInput.PlayerGeneralInputs.enabled)
-            advanceDay();
+            advanceDay?.Invoke();
     }
 
+    // enable and disable inputs
     public void EnableGeneralInputs()
     {
         _playerInput.PlayerGeneralInputs.Enable();
@@ -139,5 +142,11 @@ public class InputManager : MonoSingleton<InputManager>
     public void DisableGeneralInputs()
     {
         _playerInput.PlayerGeneralInputs.Disable();
+    }
+    
+    // view controls
+    public void ViewControls(InputAction.CallbackContext context)
+    {
+        viewControls?.Invoke();
     }
 }
